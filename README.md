@@ -24,10 +24,10 @@ The Wrangler configuration points at Vite's `dist/` output and uses single-page-
 3. In **Authentication → Users**, create your own administrator user. Do not add a public admin sign-up form.
 4. Copy that administrator user's UUID.
 5. In SQL Editor, run: `insert into public.admin_users (user_id) values ('YOUR_AUTH_USER_UUID');`
-6. Copy `.env.example` to `.env.local` and add the Supabase Project URL and anon/publishable key.
+6. Copy `.env.example` to `.env.local` and add the Supabase Project URL and publishable key.
 7. Restart the development server.
 
-For Cloudflare Workers Builds, connect this repository on branch `main`. Keep the root directory at the repository root. Set Build command to `npm run build` and Deploy command to `npx wrangler deploy`. The `wrangler.jsonc` file serves `./dist/` as static assets and enables SPA fallback. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` under Settings → Build → Build variables and secrets, then redeploy. Do not add the service-role key.
+For Cloudflare Workers Builds, connect this repository on branch `main`. Keep the root directory at the repository root. Set Build command to `npm run build` and Deploy command to `npx wrangler deploy`. The `wrangler.jsonc` file serves `./dist/` as static assets and enables SPA fallback. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` under Settings → Build → Build variables and secrets, then redeploy. The key must begin with `sb_publishable_`. Never add an `sb_secret_` or `service_role` key to a VITE_ variable.
 
 **Never put the Supabase service-role key in browser code or in a VITE_ variable. Never share your administrator password or keys in chat.**
 
