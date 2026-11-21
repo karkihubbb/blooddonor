@@ -117,6 +117,15 @@ function App() {
     if (error) setAdminMessage('Could not update donor status.');
     else { setAdminDonors(rows=>rows.map(row=>row.id===donor.id?{...row,is_available:!row.is_available}:row)); searchDonors(); }
   }
+  async function adminToggleApproval(donor) {
+    const nextApproval = !donor.is_approved;
+    const {error} = await supabase.from('donors').update({is_approved:nextApproval}).eq('id',donor.id);
+    if (error) setAdminMessage('Could not update the review status.');
+    else {
+      setAdminDonors(rows=>rows.map(row=>row.id===donor.id?{...row,is_approved:nextApproval}:row));
+      searchDonors();
+    }
+  }
 
   async function searchDonors(e) {
     e?.preventDefault();
