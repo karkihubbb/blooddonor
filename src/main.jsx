@@ -131,7 +131,7 @@ function App() {
   async function submitDonor(e) {
     e.preventDefault(); setDonorStatus('');
     if (!supabase) { setDonorStatus('offline'); return; }
-    const cleanPhone = donorForm.phone.replace(/\\D/g,'').replace(/^977/,'');
+    const cleanPhone = donorForm.phone.replace(/\D/g,'').replace(/^977/,'');
     if (!/^9[0-9]{9}$/.test(cleanPhone)) { setDonorStatus('invalidPhone'); return; }
     setSubmitting(true);
     const {error} = await supabase.from('donors').insert({name:donorForm.name.trim(),phone:cleanPhone,blood_group:donorForm.blood_group,location:donorForm.location.trim(),public_listing:donorForm.consent,is_available:true});
@@ -143,7 +143,7 @@ function App() {
   async function submitRequest(e) {
     e.preventDefault(); setRequestStatus('');
     if (!supabase) { setRequestStatus('offline'); return; }
-    const cleanPhone = requestForm.phone.replace(/\\D/g,'').replace(/^977/,'');
+    const cleanPhone = requestForm.phone.replace(/\D/g,'').replace(/^977/,'');
     if (!/^9[0-9]{9}$/.test(cleanPhone)) { setRequestStatus('invalidPhone'); return; }
     setSubmitting(true);
     const {error} = await supabase.from('blood_requests').insert({contact_name:requestForm.name.trim(),contact_phone:cleanPhone,blood_group:requestForm.blood_group,units:Number(requestForm.units),hospital_location:requestForm.hospital.trim(),consent_confirmed:requestForm.consent});
