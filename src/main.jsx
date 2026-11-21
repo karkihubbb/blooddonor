@@ -80,7 +80,7 @@ function App() {
 
   useEffect(() => {
     if (session && supabase) loadAdminData();
-    else { setIsAdmin(false); setAdminDonors([]); setAdminRequests([]); }
+    else { setIsAdmin(false); setAdminDonors([]); }
   }, [session]);
 
   async function loadAdminData() {
