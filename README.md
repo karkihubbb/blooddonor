@@ -9,6 +9,14 @@ npm install
 npm run dev
 ```
 
+Build and deploy to Cloudflare Workers:
+
+```bash
+npm run deploy
+```
+
+The Wrangler configuration points at Vite's `dist/` output and uses single-page-application fallback routing.
+
 ## Set up the database (Supabase)
 
 1. Create a Supabase project for RaktaSetu.
@@ -19,7 +27,7 @@ npm run dev
 6. Copy `.env.example` to `.env.local` and add the Supabase Project URL and anon/publishable key.
 7. Restart the development server.
 
-For Cloudflare Pages, connect this repository and select the production branch that contains this app. Use build command `npm run build` and output directory `dist`. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` under Settings → Environment variables for Production and Preview, then redeploy. Do not add the service-role key.
+For Cloudflare Workers Builds, connect this repository on branch `main`. Keep the root directory at the repository root. Set Build command to `npm run build` and Deploy command to `npx wrangler deploy`. The `wrangler.jsonc` file serves `./dist/` as static assets and enables SPA fallback. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` under Settings → Build → Build variables and secrets, then redeploy. Do not add the service-role key.
 
 **Never put the Supabase service-role key in browser code or in a VITE_ variable. Never share your administrator password or keys in chat.**
 
