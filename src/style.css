@@ -692,3 +692,127 @@ select:focus-visible, textarea:focus-visible {
   .button, .nav-links button, .donor-card, .blood-choice,
   .form-submit, .search-submit, .donor-contact { transition: none !important; }
 }
+
+
+
+/* BiratnagarBloodNetwork — considered, editorial civic-service redesign */
+:root {
+  --rakta: #8f2334;
+  --rakta-dark: #701a29;
+  --ink: #202a33;
+  --muted: #64717c;
+  --line: #e2e6e9;
+  --paper: #fff;
+  --wash: #f6f7f7;
+}
+body { color: var(--ink); background: #fff; }
+.container { width: min(1180px, calc(100% - 56px)); }
+.topline { background: #202a33; }
+.header { box-shadow: none; border-bottom: 1px solid #e7eaed; }
+.brand-mark { border-radius: 7px; }
+.nav-links { gap: 21px; }
+.nav-links button { font-size: 13px; color: #46525d; }
+.nav-links .nav-register { color: var(--rakta); font-weight: 800; }
+.nav-links .nav-cta { border-radius: 4px; padding-inline: 17px; }
+.hero { background: #f5f6f6; border-bottom: 1px solid #e5e8ea; }
+.hero-content {
+  min-height: 490px;
+  padding: 76px 0 68px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, .72fr);
+  align-items: center;
+  gap: clamp(36px, 7vw, 100px);
+}
+.hero-copy { max-width: 670px; }
+.eyebrow { font-size: 10px; font-weight: 800; letter-spacing: .18em; }
+.hero h1 { max-width: 720px; font-size: clamp(46px, 5.3vw, 70px); line-height: 1.08; letter-spacing: -2.4px; margin: 23px 0 20px; }
+.hero h1 em { font-style: normal; }
+.hero-intro { max-width: 570px; font-size: 16px; line-height: 1.85; color: #596671; }
+.hero-actions { gap: 12px; margin-top: 30px; }
+.hero-actions .button { min-height: 50px; padding-inline: 21px; }
+.hero-proof { margin-top: 34px; font-size: 10px; letter-spacing: .12em; }
+.hero-directory-card {
+  position: relative;
+  width: 100%;
+  max-width: 390px;
+  justify-self: end;
+  padding: 27px;
+  background: #fff;
+  border: 1px solid #e1e5e8;
+  border-radius: 8px;
+  box-shadow: 0 16px 42px rgba(25,35,44,.055);
+}
+.directory-card-top, .directory-card-place, .directory-card-foot { display:flex; align-items:center; gap:10px; }
+.directory-card-top { color:#78838c; font-size:9px; font-weight:800; letter-spacing:.15em; }
+.directory-card-mark { display:grid; place-items:center; width:34px; height:34px; color:var(--rakta); background:#f8edef; border-radius:6px; }
+.directory-card-place { margin-top:30px; color:var(--rakta); font-size:10px; font-weight:800; letter-spacing:.12em; }
+.hero-directory-card h2 { margin:12px 0 7px; color:#202a33; font:800 28px/1.2 "Manrope","DM Sans",sans-serif; letter-spacing:-.8px; }
+.hero-directory-card>p { margin:0; color:#6c7781; font-size:13px; line-height:1.7; }
+.hero-blood-groups { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:24px 0; }
+.hero-blood-groups span { display:grid; place-items:center; min-height:42px; border:1px solid #e5e8eb; border-radius:5px; color:#38444e; background:#fbfbfc; font:800 14px "Manrope",sans-serif; }
+.hero-blood-groups span:nth-child(4n+1), .hero-blood-groups span:nth-child(4n+2) { color:var(--rakta); }
+.directory-card-foot { padding-top:16px; border-top:1px solid #edf0f2; color:#6c7781; font-size:11px; }
+.hero-bottom-inner { justify-content:flex-start; gap:34px; }
+.hero-bottom-inner span:not(.hero-bottom-caption) { font-size:9px; letter-spacing:.15em; }
+.directory-section { padding:78px 0 84px; }
+.section-heading { margin-bottom:27px; }
+.section-heading h2 { margin-top:10px; font-size:clamp(32px,3.6vw,44px); letter-spacing:-1.1px; }
+.section-heading p { margin-top:10px; font-size:14px; }
+.portal-search { max-width:100%; padding:21px; grid-template-columns:minmax(180px,.8fr) minmax(240px,1.2fr) auto; gap:15px; background:#f7f8f8; border:1px solid #e1e6e9; border-radius:7px; }
+.portal-search .field label { margin-bottom:7px; }
+.portal-search .select-wrap, .portal-search .field input { min-height:50px; height:50px; border-radius:4px; }
+.portal-search .search-submit { min-height:50px; padding-inline:22px; border-radius:4px; }
+.directory-meta { margin-top:24px; }
+.search-prompt { border-style:solid; background:#fafbfb; }
+.action-section { padding:82px 0; background:#222b33; }
+.action-layout { align-items:center; gap:clamp(36px,6vw,88px); }
+.action-copy { max-width:490px; }
+.action-copy h2 { font-size:clamp(34px,3.8vw,46px); letter-spacing:-1.2px; }
+.action-copy>p { line-height:1.85; }
+.action-aside { margin-top:25px; }
+.form-card { border-radius:7px; box-shadow:0 18px 46px rgba(10,18,25,.13); }
+.form-card-head { padding-bottom:18px; margin-bottom:19px; }
+.form-card-head h3 { font-size:22px; }
+.stack-form { gap:15px; }
+.stack-form .field input, .stack-form .field select { border-radius:4px; }
+.form-submit { border-radius:4px; }
+.intro-band { background:#fff; border-bottom:1px solid #edf0f2; }
+.intro-layout { align-items:start; }
+.intro-layout h2 { max-width:440px; }
+.mini-stats { border-top:1px solid #e5e9ec; }
+.mini-stats>div { padding-top:17px; }
+.quote-band { background:#f6f7f7; }
+.quote-inner { max-width:850px; }
+.awareness-section { background:#fff; }
+.awareness-grid article { border-radius:6px; }
+.privacy-section { background:#f7f8f8; }
+.privacy-points article { border-radius:6px; }
+.admin-section { background:#fff; }
+.admin-login, .admin-dashboard, .admin-locked { border-radius:6px; }
+.footer { background:#202a33; }
+.footer-main { padding-top:56px; padding-bottom:42px; }
+.footer-bottom { border-top:1px solid rgba(255,255,255,.14); }
+@media (max-width:900px) {
+  .container { width:min(100% - 40px,760px); }
+  .hero-content { grid-template-columns:minmax(0,1fr) minmax(260px,.75fr); gap:26px; padding:60px 0; }
+  .hero-directory-card { padding:21px; }
+  .nav-links { gap:12px; }
+}
+@media (max-width:700px) {
+  .container { width:calc(100% - 32px); }
+  .hero-content { display:flex; flex-direction:column; align-items:stretch; gap:26px; padding:44px 0 34px; }
+  .hero h1 { font-size:clamp(39px,10vw,49px); letter-spacing:-1.5px; line-height:1.15; }
+  .hero-intro { font-size:15px; }
+  .hero-actions { grid-template-columns:1fr; }
+  .hero-actions .button { width:100%; }
+  .hero-directory-card { max-width:none; padding:20px; }
+  .directory-card-place { margin-top:20px; }
+  .hero-blood-groups { margin:18px 0; }
+  .hero-bottom-inner { gap:10px 20px; }
+  .directory-section { padding:52px 0 58px; }
+  .portal-search { padding:14px; }
+  .action-section { padding:54px 0; }
+  .action-layout { gap:28px; }
+  .form-card { padding:21px 17px; }
+  .footer-main { padding-top:42px; }
+}
