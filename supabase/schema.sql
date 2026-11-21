@@ -1,5 +1,6 @@
--- RaktaSetu: run this in the Supabase SQL Editor.
--- Keep the service-role key private. Only the anon/publishable key belongs in VITE_ variables.
+-- RaktaSetu secure database setup (Supabase PostgreSQL)
+-- Run the whole file in Supabase SQL Editor.
+-- Never expose the service_role key in frontend code.
 
 create extension if not exists pgcrypto;
 
@@ -25,26 +26,91 @@ create table if not exists public.blood_requests (
   created_at timestamptz not null default now()
 );
 
+-- Only user IDs inserted here by the project owner are administrators.
+create table if not exists public.admin_users (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+
 alter table public.donors enable row level security;
 alter table public.blood_requests enable row level security;
+alter table public.admin_users enable row level security;
 
--- Only explicitly public, currently available donor profiles can be read by visitors.
+-- Security-definer helper checks the private allow-list without exposing it.
+create or replace function public.is_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.admin_users
+    where user_id = auth.uid()
+  );
+$$;
+
+revoke all on function public.is_admin() from public;
+grant execute on function public.is_admin() to authenticated;
+
+-- Visitors can only read records donors explicitly chose to publish and marked available.
 drop policy if exists "Public can view consenting available donors" on public.donors;
 create policy "Public can view consenting available donors"
 on public.donors for select to anon, authenticated
 using (public_listing = true and is_available = true);
 
--- A donor must explicitly opt in to public listing before their profile can be inserted.
+-- Admins can read every donor record, including temporarily hidden profiles.
+drop policy if exists "Admins can view all donor records" on public.donors;
+create policy "Admins can view all donor records"
+on public.donors for select to authenticated
+using (public.is_admin());
+
+-- Public registration only adds a new record. Public users cannot update or delete.
 drop policy if exists "Visitors can register consenting donor profile" on public.donors;
 create policy "Visitors can register consenting donor profile"
 on public.donors for insert to anon, authenticated
 with check (public_listing = true);
 
--- Blood requests can be submitted, but are never publicly readable.
+-- Only the allow-listed admin can edit availability or remove a donor.
+drop policy if exists "Admins can update donor records" on public.donors;
+create policy "Admins can update donor records"
+on public.donors for update to authenticated
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Admins can delete donor records" on public.donors;
+create policy "Admins can delete donor records"
+on public.donors for delete to authenticated
+using (public.is_admin());
+
+-- Blood requests are never publicly readable.
 drop policy if exists "Visitors can submit blood requests" on public.blood_requests;
 create policy "Visitors can submit blood requests"
 on public.blood_requests for insert to anon, authenticated
 with check (consent_confirmed = true);
 
--- There are intentionally no public update/delete policies.
--- Set up a trusted admin workflow before operating the directory publicly.
+drop policy if exists "Admins can view blood requests" on public.blood_requests;
+create policy "Admins can view blood requests"
+on public.blood_requests for select to authenticated
+using (public.is_admin());
+
+drop policy if exists "Admins can delete blood requests" on public.blood_requests;
+create policy "Admins can delete blood requests"
+on public.blood_requests for delete to authenticated
+using (public.is_admin());
+
+-- admin_users has RLS enabled and deliberately has no public policies.
+-- Manage this allow-list only from the Supabase SQL Editor as project owner.
+
+-- ONE-TIME ADMIN SETUP:
+-- 1. In Supabase Dashboard > Authentication > Users, create your own admin user.
+--    Do not enable public sign-up on the website.
+-- 2. Copy that user's UUID from the Users table.
+-- 3. Replace YOUR_AUTH_USER_UUID below and run this statement separately:
+-- insert into public.admin_users (user_id) values ('YOUR_AUTH_USER_UUID');
+
+-- SECURITY NOTES:
+-- - Never put a service_role key in frontend code or VITE_ environment variables.
+-- - Only the admin allow-list can update/delete records; visitors can only insert.
+-- - Before public launch, add CAPTCHA/rate limiting and an administrator review process.
+-- - Keep donor contact details public only with explicit, informed consent.
