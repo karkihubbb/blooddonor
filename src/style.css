@@ -616,3 +616,79 @@ body {
 @media(prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+
+
+/* Usability refinement — calm motion, clearer focus, and mobile-first controls */
+:root {
+  --focus-ring: 0 0 0 3px rgba(152, 37, 54, .16);
+}
+::selection { background: rgba(152, 37, 54, .16); color: #202932; }
+a, button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button, a, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 3px solid rgba(152, 37, 54, .28);
+  outline-offset: 2px;
+}
+.hero { isolation: isolate; overflow: hidden; }
+.hero-grid { pointer-events: none; }
+.hero-grid::after {
+  content: "";
+  position: absolute;
+  inset: -20% auto -20% -35%;
+  width: 24%;
+  background: linear-gradient(90deg, transparent, rgba(152,37,54,.055), transparent);
+  transform: skewX(-18deg);
+  animation: quietSweep 11s ease-in-out infinite;
+}
+.hero-copy { position: relative; z-index: 1; }
+.hero-illustration { position: relative; z-index: 1; }
+.button, .nav-links button, .donor-card, .blood-choice, .form-submit,
+.search-submit, .donor-contact {
+  transition: color .18s ease, background-color .18s ease, border-color .18s ease,
+    box-shadow .18s ease, transform .18s ease;
+}
+.button:active, .form-submit:active, .search-submit:active,
+.donor-contact:active { transform: translateY(1px); }
+.section-heading { gap: 18px; }
+.section-heading p { max-width: 560px; }
+.field input::placeholder, .stack-form .field input::placeholder {
+  color: #8a949d;
+  opacity: 1;
+}
+.field input:disabled, .field select:disabled,
+.stack-form .field input:disabled, .stack-form .field select:disabled {
+  background: #f2f4f5;
+  color: #7b858e;
+  cursor: not-allowed;
+}
+.consent { align-items: flex-start; }
+.consent input { flex: 0 0 auto; margin-top: 2px; }
+.form-card:focus-within { border-color: #d7b6bb; }
+.empty-state { max-width: 1000px; margin-inline: auto; }
+.footer a:focus-visible, .footer button:focus-visible {
+  outline-color: rgba(255,255,255,.7);
+}
+@keyframes quietSweep {
+  0%, 18% { left: -35%; opacity: 0; }
+  28% { opacity: .8; }
+  55% { left: 115%; opacity: .45; }
+  56%, 100% { left: 115%; opacity: 0; }
+}
+@media (max-width: 700px) {
+  html { scroll-padding-top: 76px; }
+  .hero-grid::after { animation-duration: 14s; }
+  .field input, .field select, .stack-form .field input,
+  .stack-form .field select, .stack-form textarea {
+    font-size: 16px;
+  }
+  .form-card { scroll-margin-top: 82px; }
+  .nav-links { box-shadow: 0 14px 24px rgba(20,29,37,.09); }
+  .hero-proof { letter-spacing: .04em; line-height: 1.7; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-grid::after { animation: none !important; }
+  .button, .nav-links button, .donor-card, .blood-choice,
+  .form-submit, .search-submit, .donor-contact { transition: none !important; }
+}
