@@ -5,10 +5,27 @@ import { ArrowRight, ArrowUpRight, BadgeCheck, Check, ChevronDown, Clock3, Dropl
 import './style.css';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
-// Fail closed: a Supabase secret key must never be used in browser code.
-const hasPublicSupabaseKey = typeof supabasePublishableKey === 'string' && supabasePublishableKey.startsWith('sb_publishable_');
-const supabase = supabaseUrl && hasPublicSupabaseKey ? createClient(supabaseUrl, supabasePublishableKey) : null;
+const supabasePublicKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// Accept a modern publishable key or a legacy JWT whose role is explicitly "anon".
+// Never allow service_role or sb_secret keys into browser code.
+function isSafeSupabasePublicKey(value) {
+  if (typeof value !== 'string') return false;
+  if (value.startsWith('sb_publishable_')) return true;
+  const parts = value.split('.');
+  if (parts.length !== 3) return false;
+  try {
+    const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const decoded = atob(payload.padEnd(Math.ceil(payload.length / 4) * 4, '='));
+    return JSON.parse(decoded).role === 'anon';
+  } catch {
+    return false;
+  }
+}
+
+const supabase = supabaseUrl && isSafeSupabasePublicKey(supabasePublicKey)
+  ? createClient(supabaseUrl, supabasePublicKey)
+  : null;
 
 const copy = {
   en: {
