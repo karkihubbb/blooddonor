@@ -1,4 +1,4 @@
--- RaktaSetu secure database setup (Supabase PostgreSQL)
+-- BiratnagarBloodNetwork secure database setup (Supabase PostgreSQL)
 -- Run the whole file in Supabase SQL Editor.
 -- Never expose the service_role key in frontend code.
 
@@ -65,11 +65,12 @@ create policy "Admins can view all donor records"
 on public.donors for select to authenticated
 using (public.is_admin());
 
--- Public registration only adds a new record. Public users cannot update or delete.
+-- Registration accepts private or public profiles; only public, available profiles are searchable.
+-- Visitors cannot update or delete donor records.
 drop policy if exists "Visitors can register consenting donor profile" on public.donors;
-create policy "Visitors can register consenting donor profile"
+create policy "Visitors can register donor profile"
 on public.donors for insert to anon, authenticated
-with check (public_listing = true);
+with check (true);
 
 -- Only the allow-listed admin can edit availability or remove a donor.
 drop policy if exists "Admins can update donor records" on public.donors;
@@ -111,6 +112,6 @@ using (public.is_admin());
 
 -- SECURITY NOTES:
 -- - Never put a service_role key in frontend code or VITE_ environment variables.
--- - Only the admin allow-list can update/delete records; visitors can only insert.
+-- - Public visitors can register but cannot read private profiles or update/delete records.
 -- - Before public launch, add CAPTCHA/rate limiting and an administrator review process.
 -- - Keep donor contact details public only with explicit, informed consent.
