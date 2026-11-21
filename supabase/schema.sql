@@ -26,7 +26,6 @@ create table if not exists public.blood_requests (
   created_at timestamptz not null default now()
 );
 
--- Only user IDs inserted here by the project owner are administrators.
 create table if not exists public.admin_users (
   user_id uuid primary key references auth.users(id) on delete cascade,
   created_at timestamptz not null default now()
@@ -36,7 +35,6 @@ alter table public.donors enable row level security;
 alter table public.blood_requests enable row level security;
 alter table public.admin_users enable row level security;
 
--- Security-definer helper checks the private allow-list without exposing it.
 create or replace function public.is_admin()
 returns boolean
 language sql
@@ -53,26 +51,24 @@ $$;
 revoke all on function public.is_admin() from public;
 grant execute on function public.is_admin() to authenticated;
 
--- Visitors can only read records donors explicitly chose to publish and marked available.
 drop policy if exists "Public can view consenting available donors" on public.donors;
 create policy "Public can view consenting available donors"
 on public.donors for select to anon, authenticated
 using (public_listing = true and is_available = true);
 
--- Admins can read every donor record, including temporarily hidden profiles.
 drop policy if exists "Admins can view all donor records" on public.donors;
 create policy "Admins can view all donor records"
 on public.donors for select to authenticated
 using (public.is_admin());
 
--- Registration accepts private or public profiles; only public, available profiles are searchable.
--- Visitors cannot update or delete donor records.
+-- Allow donor registration with private or public listing consent.
+-- Public users still cannot read private profiles, update records, or delete records.
 drop policy if exists "Visitors can register consenting donor profile" on public.donors;
+drop policy if exists "Visitors can register donor profile" on public.donors;
 create policy "Visitors can register donor profile"
 on public.donors for insert to anon, authenticated
 with check (true);
 
--- Only the allow-listed admin can edit availability or remove a donor.
 drop policy if exists "Admins can update donor records" on public.donors;
 create policy "Admins can update donor records"
 on public.donors for update to authenticated
@@ -84,7 +80,6 @@ create policy "Admins can delete donor records"
 on public.donors for delete to authenticated
 using (public.is_admin());
 
--- Blood requests are never publicly readable.
 drop policy if exists "Visitors can submit blood requests" on public.blood_requests;
 create policy "Visitors can submit blood requests"
 on public.blood_requests for insert to anon, authenticated
@@ -101,17 +96,9 @@ on public.blood_requests for delete to authenticated
 using (public.is_admin());
 
 -- admin_users has RLS enabled and deliberately has no public policies.
--- Manage this allow-list only from the Supabase SQL Editor as project owner.
-
--- ONE-TIME ADMIN SETUP:
--- 1. In Supabase Dashboard > Authentication > Users, create your own admin user.
---    Do not enable public sign-up on the website.
--- 2. Copy that user's UUID from the Users table.
--- 3. Replace YOUR_AUTH_USER_UUID below and run this statement separately:
+-- Manage this allow-list only from the SQL Editor as project owner.
+-- Create an admin Auth user first, then insert its UUID separately:
 -- insert into public.admin_users (user_id) values ('YOUR_AUTH_USER_UUID');
 
--- SECURITY NOTES:
--- - Never put a service_role key in frontend code or VITE_ environment variables.
--- - Public visitors can register but cannot read private profiles or update/delete records.
--- - Before public launch, add CAPTCHA/rate limiting and an administrator review process.
--- - Keep donor contact details public only with explicit, informed consent.
+-- Never put a service_role key in frontend code or VITE_ environment variables.
+-- Add CAPTCHA/rate limiting and administrator review before public launch.
