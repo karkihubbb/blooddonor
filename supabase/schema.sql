@@ -15,6 +15,9 @@ create table if not exists public.donors (
   created_at timestamptz not null default now()
 );
 
+-- New donor profiles remain hidden until an administrator reviews consent and approves them.
+alter table public.donors add column if not exists is_approved boolean not null default false;
+
 create table if not exists public.blood_requests (
   id uuid primary key default gen_random_uuid(),
   contact_name text not null check (char_length(contact_name) between 2 and 90),
@@ -54,20 +57,20 @@ grant execute on function public.is_admin() to authenticated;
 drop policy if exists "Public can view consenting available donors" on public.donors;
 create policy "Public can view consenting available donors"
 on public.donors for select to anon, authenticated
-using (public_listing = true and is_available = true);
+using (public_listing = true and is_available = true and is_approved = true);
 
 drop policy if exists "Admins can view all donor records" on public.donors;
 create policy "Admins can view all donor records"
 on public.donors for select to authenticated
 using (public.is_admin());
 
--- Allow donor registration with private or public listing consent.
--- Public users still cannot read private profiles, update records, or delete records.
+-- Allow public registration, but never allow a visitor to self-approve a donor profile.
+-- Public listing only becomes visible after an administrator verifies consent and approves the record.
 drop policy if exists "Visitors can register consenting donor profile" on public.donors;
 drop policy if exists "Visitors can register donor profile" on public.donors;
 create policy "Visitors can register donor profile"
 on public.donors for insert to anon, authenticated
-with check (true);
+with check (is_approved = false);
 
 drop policy if exists "Admins can update donor records" on public.donors;
 create policy "Admins can update donor records"
