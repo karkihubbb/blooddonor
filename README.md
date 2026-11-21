@@ -15,7 +15,7 @@ Build and deploy to Cloudflare Workers:
 npm run deploy
 ```
 
-The Wrangler configuration points at Vite's `dist/` output and uses single-page-application fallback routing.
+The Wrangler configuration points at Vite's `dist/` output and uses single-page-application fallback routing. Cloudflare Workers Builds should watch the `main` branch, run `npm run build`, and deploy with `npx wrangler deploy`.
 
 ## Set up the database (Supabase)
 
