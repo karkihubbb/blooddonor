@@ -108,3 +108,82 @@ p{line-height:1.85}
   .admin-toolbar button{font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+/* Nepali-first, high-contrast, mobile-first accessibility redesign */
+:root{--rakta:#c62828;--ink:#202020;font-size:18px}
+html{scroll-behavior:smooth}
+body{font-size:18px;color:#202020;background:#fff;font-family:"Noto Sans Devanagari","Mukta",sans-serif}
+.topline{height:auto;min-height:54px;background:#fff}
+.topline-inner{min-height:54px;font-size:15px;gap:12px}
+.language-switch{display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #e6dddd;border-radius:999px;background:#fff;font-size:16px;font-weight:800}
+.language-switch button{border:0;background:transparent;padding:5px 7px;color:#5d5555;font:inherit;cursor:pointer}
+.language-switch button.active{color:#c62828}
+.header{position:sticky;top:0;z-index:30;background:#fff;box-shadow:0 3px 18px #1713130c}
+.nav-links button{font-size:16px;min-height:48px}
+.hero{background:#c62828;color:#fff;min-height:0}
+.hero-content{min-height:0;padding-top:70px;padding-bottom:64px}
+.hero h1{font-family:"Noto Sans Devanagari","Mukta",sans-serif;font-size:clamp(38px,6vw,64px);line-height:1.35;letter-spacing:0}
+.hero-intro{font-size:20px;line-height:1.8;color:#fff;max-width:600px}
+.hero-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-width:650px;gap:14px}
+.button,.hero-actions .button,.form-submit,.search-submit{min-height:58px;padding:14px 22px;font-size:18px;font-weight:800;border-radius:12px;justify-content:center}
+.button-light{background:#fff;color:#a51e30}
+.button-outline{border:2px solid #fff;color:#fff;background:transparent}
+.section-pad,.intro-band,.action-section,.photo-story{padding-top:64px;padding-bottom:64px}
+.section-heading h2,.intro-layout h2,.request-heading h2,.action-copy h2{font-family:"Noto Sans Devanagari","Mukta",sans-serif;font-size:clamp(30px,4vw,42px);line-height:1.35;letter-spacing:0}
+.section-heading p,.intro-right>p,.request-heading>p,.action-copy>p{font-size:19px;line-height:1.85}
+.field{gap:9px}
+.field label,.stack-form .field label{font-size:18px;font-weight:800;color:#282323}
+.field input,.field select,.select-wrap,.input-wrap,.stack-form .field input,.stack-form .field select{height:58px;min-height:58px;font-size:18px;padding:0 14px;border:1.5px solid #cfc8c8;border-radius:10px;background:#fff;color:#171717}
+.search-panel{grid-template-columns:1fr auto;gap:16px;padding:20px;border-radius:16px}
+.search-submit{min-width:160px}
+.donor-grid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.donor-card{border:1px solid #eee0e0;border-radius:16px;box-shadow:0 8px 28px #3b17170d;padding:24px;min-height:0}
+.donor-card h3{font-size:22px;font-weight:800;margin:16px 0 8px;color:#202020}
+.donor-location{font-size:17px;color:#494242}
+.blood-badge{font-size:22px;min-width:52px;min-height:52px;border-radius:14px}
+.available-tag{font-size:14px}
+.donor-contact{display:flex;min-height:56px;align-items:center;justify-content:center;gap:8px;background:#c62828;color:white;border-radius:10px;font-size:17px;font-weight:800;text-decoration:none;margin-top:16px;padding:10px}
+.blood-picker{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.blood-choice{min-height:58px;border:1.5px solid #d7cccc;border-radius:10px;background:#fff;color:#272121;font-size:20px;font-weight:800;cursor:pointer}
+.blood-choice.selected{background:#c62828;color:#fff;border-color:#c62828;box-shadow:0 0 0 3px #c6282825}
+.consent{font-size:16px;line-height:1.7;align-items:flex-start}
+.consent input{width:22px;height:22px;flex:0 0 auto;margin-top:3px}
+.form-card{border:1px solid #eee0e0;border-radius:18px;box-shadow:0 12px 36px #35161612;padding:clamp(20px,4vw,34px)}
+.form-card-head h3{font-size:26px}
+.form-message{font-size:17px;line-height:1.7;padding:14px;border-radius:10px}
+.urgent-float{position:fixed;z-index:45;right:16px;bottom:18px;display:none;min-height:58px;align-items:center;justify-content:center;padding:12px 18px;background:#b71c1c;color:#fff;border-radius:999px;box-shadow:0 7px 25px #33000035;text-decoration:none;font-size:16px;font-weight:800}
+button,a,input,select{touch-action:manipulation}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #ffb300;outline-offset:3px}
+@media(max-width:700px){
+ .container{width:min(100% - 28px,560px)}
+ .topline-inner{padding:8px 0;align-items:center;flex-wrap:wrap;font-size:13px}
+ .topline-right{margin-left:auto}
+ .hero-content{padding:44px 0 34px}
+ .hero h1{font-size:clamp(36px,10vw,46px);line-height:1.42}
+ .hero-intro{font-size:18px;line-height:1.8}
+ .hero-actions{grid-template-columns:1fr;max-width:none;gap:10px}
+ .hero-actions .button{width:100%;min-height:60px;font-size:18px}
+ .hero-art{display:none}
+ .hero-proof{font-size:13px;flex-wrap:wrap}
+ .hero-bottom-inner{height:auto;min-height:54px;gap:14px;white-space:normal;font-size:12px;flex-wrap:wrap;padding:12px 0}
+ .section-pad,.intro-band,.action-section,.photo-story{padding-top:46px;padding-bottom:46px}
+ .section-heading h2,.intro-layout h2,.request-heading h2,.action-copy h2{font-size:32px}
+ .section-heading p,.intro-right>p,.request-heading>p,.action-copy>p{font-size:18px}
+ .search-panel{grid-template-columns:1fr;padding:16px}
+ .search-submit{width:100%;min-height:60px}
+ .donor-grid{grid-template-columns:1fr}
+ .donor-card{padding:20px}
+ .donor-card h3{font-size:22px}
+ .field label,.stack-form .field label{font-size:18px}
+ .field input,.field select,.stack-form .field input,.stack-form .field select{height:58px;font-size:18px}
+ .form-card{padding:20px 16px}
+ .form-row{grid-template-columns:1fr}
+ .form-submit{width:100%;min-height:60px}
+ .blood-picker{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+ .blood-choice{min-height:58px;font-size:19px}
+ .urgent-float{display:flex;left:14px;right:14px;bottom:12px}
+ .footer{padding-bottom:88px}
+ .footer-links{gap:24px}
+}
+@media(max-width:380px){.language-switch{font-size:14px;padding:4px 6px}.blood-choice{font-size:17px}}
