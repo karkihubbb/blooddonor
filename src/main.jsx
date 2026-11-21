@@ -209,7 +209,7 @@ function App() {
     {value:'Rangeli / रंगेली',en:'Rangeli',ne:'रंगेली'},
     {value:'Other areas of Morang / मोरङका अन्य क्षेत्र',en:'Other areas of Morang',ne:'मोरङका अन्य क्षेत्र'},
     {value:'Other location / अन्य स्थान',en:'Other location',ne:'अन्य स्थान'}
-  ]
+  ];
 
   return <div className="site-shell">
     <div className="topline"><div className="container topline-inner"><span><span className="pulse"></span>{t.live}</span><span className="topline-right"><MapPin size={13}/> Biratnagar, Nepal <span className="top-divider"></span><div className="language-switch"><button className={lang==='ne'?'active':''} onClick={()=>setLang('ne')}>नेपाली</button><span>|</span><button className={lang==='en'?'active':''} onClick={()=>setLang('en')}>English</button></div></span></div></div>
