@@ -5,8 +5,10 @@ import { ArrowRight, ArrowUpRight, BadgeCheck, Check, ChevronDown, Clock3, Dropl
 import './style.css';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Fail closed: a Supabase secret key must never be used in browser code.
+const hasPublicSupabaseKey = typeof supabasePublishableKey === 'string' && supabasePublishableKey.startsWith('sb_publishable_');
+const supabase = supabaseUrl && hasPublicSupabaseKey ? createClient(supabaseUrl, supabasePublishableKey) : null;
 
 const copy = {
   en: {
