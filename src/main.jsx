@@ -19,7 +19,14 @@ const copy = {
   }
 };
 
-const bloodGroups = ['A+','A−','B+','B−','AB+','AB−','O+','O−'];
+const bloodGroups = ['A+','A-','B+','B-','AB+','AB-','O+','O-'];
+const normalizeNepalPhone = value => {
+  const nepaliDigits = '०१२३४५६७८९';
+  let digits = String(value || '').replace(/[०-९]/g, digit => String(nepaliDigits.indexOf(digit))).replace(/\D/g, '');
+  if (digits.startsWith('977') && digits.length === 13) digits = digits.slice(3);
+  if (digits.startsWith('0') && digits.length === 11) digits = digits.slice(1);
+  return /^9[0-9]{9}$/.test(digits) ? digits : '';
+};
 
 function App() {
   const [lang,setLang] = useState(() => { try { return localStorage.getItem('rakta-language') || 'ne'; } catch { return 'ne'; } });
