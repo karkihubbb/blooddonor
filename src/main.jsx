@@ -37,6 +37,7 @@ function App() {
   const [donors,setDonors] = useState([]);
   const [loading,setLoading] = useState(false);
   const [searchDone,setSearchDone] = useState(false);
+  const [searchError,setSearchError] = useState(false);
   const [donorForm,setDonorForm] = useState({name:'',phone:'',blood_group:'',location:'',consent:false});
   const [requestForm,setRequestForm] = useState({name:'',phone:'',blood_group:'',units:'1',hospital:'',consent:false});
   const [donorStatus,setDonorStatus] = useState('');
@@ -77,7 +78,7 @@ function App() {
     }
     setIsAdmin(true);
     const [donorResult,requestResult] = await Promise.all([
-      supabase.from('donors').select('id,name,phone,blood_group,location,public_listing,is_available,created_at').order('created_at',{ascending:false}),
+      supabase.from('donors').select('id,name,phone,blood_group,location,public_listing,is_available,is_approved,created_at').order('created_at',{ascending:false}),
       supabase.from('blood_requests').select('id,contact_name,contact_phone,blood_group,units,hospital_location,created_at').order('created_at',{ascending:false})
     ]);
     if (donorResult.error || requestResult.error) setAdminMessage('Could not load all records. Check the database policies.');
@@ -119,16 +120,17 @@ function App() {
 
   async function searchDonors(e) {
     e?.preventDefault();
-    setLoading(true); setSearchDone(true);
+    setLoading(true); setSearchDone(true); setSearchError(false);
     if (!supabase) {
       setDonors([]);
       setLoading(false); return;
     }
-    let query = supabase.from('donors').select('id,name,phone,blood_group,location,is_available,created_at').eq('is_available',true).eq('public_listing',true).order('created_at',{ascending:false});
+    let query = supabase.from('donors').select('id,name,phone,blood_group,location,is_available,created_at').eq('is_available',true).eq('public_listing',true).eq('is_approved',true).order('created_at',{ascending:false});
     if (group !== 'all') query = query.eq('blood_group',group);
     if (searchLocation.trim()) query = query.ilike('location',`%${searchLocation.trim()}%`);
     const {data,error} = await query.limit(60);
     setDonors(error ? [] : (data || []));
+    setSearchError(Boolean(error));
     setLoading(false);
   }
 
