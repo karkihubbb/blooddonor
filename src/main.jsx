@@ -348,6 +348,10 @@ function App() {
               <p>{card.body}</p>
             </article>)}
           </div>
+          <div className="seo-related-pages">
+            <a href="./blood-donors-in-biratnagar/">{lang==='ne'?'विराटनगरमा रक्तदाता खोज्ने तरिका':'How to find blood donors in Biratnagar'} <ArrowUpRight size={15}/></a>
+            <a href="./blood-needed-in-biratnagar/">{lang==='ne'?'विराटनगरमा रगत खोजिरहनुभएको छ?':'Looking for blood in Biratnagar?'} <ArrowUpRight size={15}/></a>
+          </div>
         </div>
       </section>
 
