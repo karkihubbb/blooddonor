@@ -306,3 +306,19 @@ img,svg{max-width:100%}
   .consent-card strong{font-size:13px}
   .consent-card small{font-size:12px}
 }
+
+.footer-phone{
+  display:inline-flex;
+  align-items:center;
+  min-height:38px;
+  margin:3px 0 7px;
+  color:#fff;
+  font-size:13px;
+  font-weight:750;
+  text-decoration:none;
+  text-underline-offset:4px;
+}
+.footer-phone:hover,.footer-phone:focus-visible{text-decoration:underline;color:#ffd9df}
+@media(max-width:760px){
+  .footer-phone{min-height:42px;font-size:13px}
+}
