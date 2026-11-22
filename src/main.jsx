@@ -191,7 +191,7 @@ function App() {
     {value:'Other location / अन्य स्थान',en:'Other location',ne:'अन्य स्थान'}
   ];
 
-  const isPrivateAdminRoute = window.location.pathname === '/private-admin';
+  const isPrivateAdminRoute = window.location.pathname === '/raktasetu-control-8f4c2d91';
 
   return <div className="site-shell">
     {!isPrivateAdminRoute && <>
