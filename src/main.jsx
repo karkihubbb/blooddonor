@@ -97,7 +97,7 @@ function App() {
       setAdminLoading(false); return;
     }
     setIsAdmin(true);
-    const {data:donorData,error:donorError} = await supabase.from('donors').select('id,name,phone,blood_group,location,public_listing,is_available,is_approved,created_at').order('created_at',{ascending:false});
+    const {data:donorData,error:donorError} = await supabase.rpc('admin_list_donors');
     if (donorError) setAdminMessage('Could not load donor records. Check the database policies.');
     setAdminDonors(donorData || []);
     setAdminLoading(false);
@@ -156,12 +156,17 @@ function App() {
   async function revealDonorContact(donor) {
     if (contactNumbers[donor.id] || contactLoading[donor.id]) return;
     setContactLoading(rows=>({...rows,[donor.id]:true}));
-    // Contact data is requested only after the visitor presses the contact button.
-    const {data,error} = await supabase.from('donors').select('phone').eq('id',donor.id).eq('is_available',true).eq('public_listing',true).eq('is_approved',true).maybeSingle();
-    if (error || !data?.phone) {
+    // The database RPC checks donor consent and applies a basic per-browser request limit.
+    let requestToken = '';
+    try {
+      requestToken = sessionStorage.getItem('bbn-contact-token') || crypto.randomUUID();
+      sessionStorage.setItem('bbn-contact-token',requestToken);
+    } catch { requestToken = crypto.randomUUID(); }
+    const {data,error} = await supabase.rpc('request_donor_contact',{p_donor_id:donor.id,p_request_token:requestToken});
+    if (error || !data) {
       setSearchError(true);
     } else {
-      setContactNumbers(rows=>({...rows,[donor.id]:data.phone}));
+      setContactNumbers(rows=>({...rows,[donor.id]:data}));
     }
     setContactLoading(rows=>({...rows,[donor.id]:false}));
   }
