@@ -1,5 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-<rect width="512" height="512" rx="112" fill="#9f1d2d"/>
-<path d="M256 74c-42 67-125 159-125 250a125 125 0 0 0 250 0c0-91-83-183-125-250Z" fill="#fff"/>
-<path d="M190 321c8 35 35 57 70 61" fill="none" stroke="#f7c8ce" stroke-width="22" stroke-linecap="round"/>
+<rect width="512" height="512" rx="64" fill="#f3f1e6"/>
+<g transform="translate(0 2)">
+  <path d="M275 48c-16 0-27 8-38 20-12 13-27 20-44 29-19 10-35 22-48 38l-31 38c-8 10-4 20 8 19 19-2 34-16 48-29l24-22c-13 19-27 36-40 53-8 11-1 22 12 18 19-6 34-25 49-41l20-22c-8 16-17 31-25 47-6 12 4 21 16 14 18-11 29-29 41-48l22-34c12-18 30-27 51-35 27-10 43-31 55-55l10-20z" fill="#b51220"/>
+  <path d="M236 169c-13 2-25 10-37 20l-40 34c-13 11-26 24-37 38-5 7-1 15 7 14 15-2 29-13 42-24l31-26c-9 11-19 22-27 34-5 8 0 15 9 12 15-5 26-17 39-29l20-20c-5 10-11 20-15 30-3 8 4 14 12 9 15-9 25-22 35-36l16-23c-8-2-16-8-23-15-9-9-18-14-32-14z" fill="#fff" stroke="#b51220" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M277 171c-8 13-15 24-15 33a15 15 0 0 0 30 0c0-9-7-20-15-33z" fill="#b51220"/>
+</g>
+<text x="256" y="326" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="54" font-weight="900" letter-spacing="-2" fill="#171717">BIRATNAGAR</text>
+<path d="M77 354h62m294 0h-62" stroke="#b51220" stroke-width="4"/>
+<text x="256" y="373" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" letter-spacing="5" fill="#b51220">BLOOD NETWORK</text>
 </svg>
