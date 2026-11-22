@@ -5,21 +5,22 @@
 alter table public.donors
   add column if not exists over_18 boolean not null default false,
   add column if not exists weight_kg numeric(5,1),
-  add column if not exists has_donated boolean not null default false,
+  add column if not exists has_donated boolean,
   add column if not exists last_donation_date date;
 
 -- Existing records are not silently treated as age-verified. They remain non-public
 -- until reviewed/updated by the project owner. New public registrations must affirm 18+.
 alter table public.donors
   drop constraint if exists donors_over_18_required,
-  add constraint donors_over_18_required check (over_18 = true),
+  add constraint donors_over_18_required check (over_18 = true) not valid,
   drop constraint if exists donors_weight_range,
-  add constraint donors_weight_range check (weight_kg is not null and weight_kg >= 45 and weight_kg <= 250),
+  add constraint donors_weight_range check (weight_kg is not null and weight_kg >= 45 and weight_kg <= 250) not valid,
   drop constraint if exists donors_donation_history_consistent,
   add constraint donors_donation_history_consistent check (
-    (has_donated = true and last_donation_date is not null)
+    (has_donated is null and last_donation_date is null)
+    or (has_donated = true and last_donation_date is not null)
     or (has_donated = false and last_donation_date is null)
-  );
+  ) not valid;
 
 create or replace function public.validate_donor_registration_fields()
 returns trigger
@@ -55,7 +56,7 @@ begin
     raise exception 'Please check the weight entered';
   end if;
 
-  if new.has_donated and new.last_donation_date is null then
+  if new.has_donated is null then\n    raise exception 'Please choose whether you have donated whole blood before';\n  end if;\n  if new.has_donated and new.last_donation_date is null then
     raise exception 'Please provide the last whole-blood donation date';
   end if;
   if not new.has_donated and new.last_donation_date is not null then
@@ -71,11 +72,11 @@ $$;
 
 drop trigger if exists donors_validate_registration_fields on public.donors;
 create trigger donors_validate_registration_fields
-before insert or update of name, over_18, weight_kg, has_donated, last_donation_date
+before insert
 on public.donors
 for each row execute function public.validate_donor_registration_fields();
 
--- The public card intentionally exposes only consented directory fields.
+-- Existing profiles are not treated as age-confirmed; remove them from public view\n-- until the project owner has a safe way to reconfirm their details.\nupdate public.donors set is_approved = false where over_18 = false;\n\n-- The public card intentionally exposes only consented directory fields.
 -- Age declaration and weight remain private; phone is public because the registration
 -- consent explicitly says anyone can tap it to call.
 revoke select on table public.donors from anon, authenticated;
