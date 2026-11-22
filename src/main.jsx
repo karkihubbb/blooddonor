@@ -48,7 +48,7 @@ const normalizeNepalPhone = value => {
 };
 
 function App() {
-  const [lang,setLang] = useState(() => { try { return localStorage.getItem('rakta-language') || 'ne'; } catch { return 'ne'; } });
+  const [lang,setLang] = useState(() => { try { return localStorage.getItem('rakta-language-v2') || 'en'; } catch { return 'en'; } });
   const [mobileMenu,setMobileMenu] = useState(false);
   const [group,setGroup] = useState('all');
   const [searchLocation,setSearchLocation] = useState('');
@@ -69,7 +69,7 @@ function App() {
   const [isAdmin,setIsAdmin] = useState(false);
   const [privacyOpen,setPrivacyOpen] = useState(false);
   const t = copy[lang];
-  useEffect(() => { document.documentElement.lang = lang; document.title = lang === 'ne' ? 'विराटनगर रक्तदाता सञ्जाल' : 'BiratnagarBloodNetwork'; try { localStorage.setItem('rakta-language',lang); } catch {} }, [lang]);
+  useEffect(() => { document.documentElement.lang = lang; document.title = lang === 'ne' ? 'विराटनगर रक्तदाता सञ्जाल' : 'BiratnagarBloodNetwork'; try { localStorage.setItem('rakta-language-v2',lang); } catch {} }, [lang]);
 
   useEffect(() => {
     if (!supabase) return;
