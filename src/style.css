@@ -1244,3 +1244,16 @@ body {
 .donor-last-donation{margin:9px 0 0;color:#667085;font-size:11px;line-height:1.5}
 .donor-phone-link{width:100%;border:1px solid #e5e7eb}
 .donor-phone-link span{overflow-wrap:anywhere}
+
+/* Homepage awareness feature */
+.hero-awareness{width:100%;max-width:470px;justify-self:end;align-self:center;animation:portalRise .8s .12s both}
+.hero-awareness-gallery{display:grid;grid-template-columns:1.12fr .88fr;gap:12px;align-items:center}
+.hero-awareness-gallery figure{min-width:0;margin:0;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:9px;background:#fff;border:1px solid #e8e1e2;border-radius:8px;box-shadow:0 14px 34px rgba(32,42,51,.09)}
+.hero-awareness-main img{display:block;width:100%;height:340px;object-fit:contain;object-position:center}
+.hero-awareness-side{transform:translateY(24px)}
+.hero-awareness-side img{display:block;width:100%;height:270px;object-fit:contain;object-position:center}
+.hero-awareness-quote{margin:34px 0 0 8%;padding:17px 20px 18px;background:#fff;border-left:3px solid var(--rakta);box-shadow:0 8px 26px rgba(32,42,51,.055)}
+.hero-awareness-quote span{color:var(--rakta);font-size:9px;font-weight:800;letter-spacing:.16em}
+.hero-awareness-quote p{margin:8px 0 0;color:#303b44;font-family:"Manrope","Noto Sans Devanagari",sans-serif;font-size:15px;font-weight:700;line-height:1.6}
+@media(max-width:900px){.hero-awareness{max-width:100%}.hero-awareness-main img{height:300px}.hero-awareness-side img{height:245px}}
+@media(max-width:700px){.hero-awareness{max-width:520px;margin:4px auto 0}.hero-awareness-gallery{grid-template-columns:1.08fr .92fr;gap:9px}.hero-awareness-gallery figure{padding:6px;border-radius:6px}.hero-awareness-main img{height:245px}.hero-awareness-side{transform:translateY(14px)}.hero-awareness-side img{height:205px}.hero-awareness-quote{margin:26px 0 0 5%;padding:14px 16px}.hero-awareness-quote p{font-size:14px}}
