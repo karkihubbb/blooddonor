@@ -1322,3 +1322,90 @@ body {
   .hero-awareness-quote{width:94%;margin:15px 0 0 auto;padding:13px 15px}
   .hero-awareness-quote p{font-size:13px}
 }
+
+
+/* Mobile-first action hierarchy and touch-friendly layout */
+.button-donor-primary{
+  min-height:58px;
+  padding:16px 23px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:11px;
+  color:#fff;
+  background:var(--rakta,#b42335);
+  border:1px solid var(--rakta,#b42335);
+  border-radius:10px;
+  box-shadow:0 8px 20px rgba(159,29,45,.17);
+  font-size:16px;
+  font-weight:800;
+  letter-spacing:0;
+}
+.button-donor-primary:hover{background:var(--rakta-dark,#8f1d2d);border-color:var(--rakta-dark,#8f1d2d)}
+.hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:25px}
+.hero-actions .button{min-height:54px;padding:14px 20px}
+.hero-actions .button-donor-primary{min-height:60px;padding:16px 24px;font-size:16px}
+.hero-actions .button-light{background:#fff;color:var(--rakta,#b42335);border:1px solid #e7cbd0;box-shadow:none}
+.hero-actions .button-light:hover{background:#fff5f6}
+@media(max-width:700px){
+  html{scroll-padding-top:84px}
+  body{font-size:15px}
+  .container{width:calc(100% - 32px)}
+  .topline-inner{min-height:36px;gap:8px;font-size:10px}
+  .topline-right{gap:7px}
+  .header{position:sticky;top:0;z-index:50}
+  .nav-wrap{min-height:66px;gap:10px}
+  .brand{min-width:0;max-width:calc(100% - 58px);gap:9px}
+  .brand strong{font-size:13px;overflow-wrap:anywhere}
+  .brand small{font-size:9px;letter-spacing:.08em}
+  .brand-mark{width:38px;height:38px;flex:0 0 38px}
+  .mobile-toggle{width:44px;height:44px;display:grid;place-items:center;flex:0 0 44px}
+  .nav-links{position:absolute;top:100%;left:0;right:0;z-index:60;display:none;flex-direction:column;align-items:stretch;gap:4px;padding:12px 16px 16px;background:#fff;border-top:1px solid #eee7e8;box-shadow:0 14px 24px rgba(32,42,51,.12)}
+  .nav-links.open{display:flex}
+  .nav-links button{width:100%;min-height:46px;justify-content:flex-start;padding:12px 13px;text-align:left;font-size:14px}
+  .nav-links .nav-cta{justify-content:center;margin-top:5px;min-height:50px}
+  .hero-content{display:flex;flex-direction:column;align-items:stretch;gap:24px;min-height:0;padding:36px 0 30px}
+  .hero-copy{width:100%;min-width:0}
+  .hero h1{font-size:clamp(36px,9.5vw,46px);line-height:1.12;letter-spacing:-1.2px}
+  .hero-intro{max-width:60ch;margin-top:15px;font-size:15px;line-height:1.7}
+  .hero-actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}
+  .hero-actions .button{width:100%;min-height:56px;font-size:15px}
+  .hero-actions .button-donor-primary{min-height:62px;font-size:17px;order:0}
+  .hero-actions .button-light{order:1}
+  .hero-proof{flex-wrap:wrap;gap:8px 10px;margin-top:18px;font-size:10px}
+  .hero-awareness{width:100%;max-width:520px;margin:0 auto}
+  .hero-awareness-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .hero-awareness-gallery figure{height:clamp(190px,56vw,250px);padding:7px}
+  .hero-awareness-quote{width:100%;margin:12px 0 0;padding:13px 15px}
+  .hero-bottom-inner{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:14px 0}
+  .directory-section,.section-pad{padding-top:48px;padding-bottom:52px}
+  .section-heading{gap:12px;align-items:flex-start}
+  .section-heading h2{font-size:clamp(27px,7vw,34px);line-height:1.18}
+  .section-heading p{font-size:14px;line-height:1.65}
+  .portal-search{display:grid;grid-template-columns:1fr;padding:14px;gap:13px}
+  .portal-search .field input,.portal-search .field select,.portal-search .select-wrap{width:100%;min-height:50px;font-size:16px}
+  .portal-search .search-submit{width:100%;min-height:52px}
+  .donor-grid{grid-template-columns:1fr;gap:13px}
+  .donor-card{padding:17px;border-radius:12px}
+  .action-section{padding:42px 0}
+  .action-layout{display:grid;grid-template-columns:1fr;gap:22px}
+  .action-copy h2{font-size:clamp(28px,7vw,35px);line-height:1.18}
+  .form-card{width:100%;padding:19px 15px;border-radius:13px}
+  .stack-form{gap:13px}
+  .stack-form .field input,.stack-form .field select,.stack-form .field textarea{width:100%;min-height:48px;font-size:16px}
+  .form-submit{width:100%;min-height:52px}
+  .awareness-grid,.privacy-points{grid-template-columns:1fr;gap:12px}
+  .footer-main{display:grid;grid-template-columns:1fr;gap:25px;padding-top:36px}
+  .footer-bottom{gap:10px;flex-wrap:wrap}
+  input,select,textarea,button{touch-action:manipulation}
+}
+@media(max-width:420px){
+  .container{width:calc(100% - 28px)}
+  .topline-inner{font-size:9px}
+  .brand strong{font-size:12px}
+  .hero h1{font-size:clamp(34px,9.2vw,40px)}
+  .hero-awareness-gallery figure{height:clamp(175px,54vw,215px);padding:6px}
+  .hero-awareness-quote p{font-size:12px}
+  .hero-bottom-inner{font-size:9px}
+  .section-number{display:none}
+}
