@@ -306,7 +306,7 @@ function App() {
       </div></section>
 
       <section className="hero" id="home"><div className="hero-grid"></div><div className="container hero-content">
-        <div className="hero-copy"><div className="eyebrow"><span className="eyebrow-line"></span>{t.eyebrow}</div><h1>{t.title}<br/><em>{t.titleAccent}</em></h1><p className="hero-intro">{t.intro}</p><div className="hero-actions"><button className="button button-light" onClick={()=>scrollTo('find')}>{lang==='ne'?'रक्तदाता खोज्नुहोस्':'Find a Donor'}<Search size={17}/></button></div><div className="hero-proof"><div className="proof-icon"><HeartHandshake size={18}/></div><span>{t.local}</span><span className="proof-dot"></span><span>{lang==='ne'?'स्वैच्छिक · सहमतिमा आधारित':'VOLUNTARY · CONSENT-BASED'}</span></div></div>
+        <div className="hero-copy"><div className="eyebrow"><span className="eyebrow-line"></span>{t.eyebrow}</div><h1>{t.title}<br/><em>{t.titleAccent}</em></h1><p className="hero-intro">{t.intro}</p><div className="hero-actions"><button className="button button-donor-primary" onClick={()=>scrollTo('donate')}><HeartHandshake size={19}/>{t.become}<ArrowUpRight size={17}/></button><button className="button button-light" onClick={()=>scrollTo('find')}>{lang==='ne'?'रक्तदाता खोज्नुहोस्':'Find a Donor'}<Search size={17}/></button></div><div className="hero-proof"><div className="proof-icon"><HeartHandshake size={18}/></div><span>{t.local}</span><span className="proof-dot"></span><span>{lang==='ne'?'स्वैच्छिक · सहमतिमा आधारित':'VOLUNTARY · CONSENT-BASED'}</span></div></div>
 
       <aside className="hero-awareness" aria-label="Blood donation awareness">
         <div className="hero-awareness-gallery">
