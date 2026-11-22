@@ -83,3 +83,36 @@ end;
 $$;
 revoke all on function public.request_donor_contact(uuid, uuid) from public;
 grant execute on function public.request_donor_contact(uuid, uuid) to anon, authenticated;
+
+
+-- Automatic public listing: opting in at registration is the approval.
+-- Backfill existing consenting donors and keep future registrations in sync.
+create or replace function public.auto_approve_public_donor()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  new.is_approved := coalesce(new.public_listing, false);
+  return new;
+end;
+$$;
+
+drop trigger if exists donors_auto_approve_public_listing on public.donors;
+create trigger donors_auto_approve_public_listing
+before insert or update of public_listing on public.donors
+for each row execute function public.auto_approve_public_donor();
+
+update public.donors
+set is_approved = true
+where public_listing = true and is_approved = false;
+
+drop policy if exists "Public can view consenting available donors" on public.donors;
+create policy "Public can view consenting available donors"
+on public.donors for select to anon, authenticated
+using (public_listing = true and is_available = true and is_approved = true);
+
+drop policy if exists "Visitors can register donor profile" on public.donors;
+create policy "Visitors can register donor profile"
+on public.donors for insert to anon, authenticated
+with check (public_listing = true and is_approved = true);
