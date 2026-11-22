@@ -371,3 +371,43 @@ img,svg{max-width:100%}
   .nav-install{width:100%;min-height:46px;justify-content:center;margin:8px 0}
   .install-help-card{padding:24px 20px}
 }
+
+/* Compact donation-date option: easy to understand and tap on phones */
+.remember-simple{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  width:fit-content;
+  max-width:100%;
+  min-height:44px;
+  margin-top:8px;
+  padding:8px 12px;
+  border:1px solid #e8e1e2;
+  border-radius:8px;
+  background:#faf8f8;
+  color:#46515b;
+  font-size:13px;
+  font-weight:600;
+  line-height:1.35;
+  cursor:pointer;
+}
+.remember-simple input{
+  width:19px;
+  height:19px;
+  min-width:19px;
+  margin:0;
+  accent-color:#9f1d2d;
+}
+.remember-simple:has(input:checked){
+  border-color:rgba(159,29,45,.45);
+  background:#fff5f6;
+  color:#8f1b2b;
+}
+@media(max-width:760px){
+  .remember-simple{
+    min-height:46px;
+    padding:9px 13px;
+    font-size:13px;
+  }
+  .remember-simple input{width:21px;height:21px;min-width:21px}
+}
