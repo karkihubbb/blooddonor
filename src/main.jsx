@@ -50,7 +50,7 @@ const localGuideCopy = {
     faqHeading: 'Questions about finding blood donors',
     faqIntro: 'A few practical details about using this community donor directory.',
     faqCards: [
-      { title: 'Does the directory guarantee a donor is available?', body: 'No. It shows eligible public listings from volunteers who have agreed to be included. Listings can change, and the site cannot guarantee that a donor is available for a particular request.' },
+      { title: 'Does the directory guarantee a donor is available?', body: 'No. It shows public listings from volunteers who have agreed to be included. Listings can change, and the site cannot guarantee that a donor is available for a particular request.' },
       { title: 'Are donor phone numbers shown openly?', body: 'No. Donor cards do not display the phone number as plain text. Use the request-phone option on the listing to start the contact process.' },
       { title: 'Can I register as a voluntary donor?', body: 'Yes. Use the donor registration form and provide your own details. The current registration form requires public-listing consent and collects your name, blood group, area and phone number. Register only with your own details if you agree to the form's stated consent terms.' }
     ]
