@@ -64,13 +64,13 @@ create policy "Admins can view all donor records"
 on public.donors for select to authenticated
 using (public.is_admin());
 
--- Allow public registration, but never allow a visitor to self-approve a donor profile.
--- Public listing only becomes visible after an administrator verifies consent and approves the record.
+-- Allow public registration. A donor is auto-listed only when the same registration explicitly opts in.
+-- The public-listing checkbox is consent to display the submitted contact details.
 drop policy if exists "Visitors can register consenting donor profile" on public.donors;
 drop policy if exists "Visitors can register donor profile" on public.donors;
 create policy "Visitors can register donor profile"
 on public.donors for insert to anon, authenticated
-with check (is_approved = false);
+with check (is_approved = public_listing);
 
 drop policy if exists "Admins can update donor records" on public.donors;
 create policy "Admins can update donor records"
