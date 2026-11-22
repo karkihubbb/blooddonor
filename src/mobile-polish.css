@@ -322,3 +322,52 @@ img,svg{max-width:100%}
 @media(max-width:760px){
   .footer-phone{min-height:42px;font-size:13px}
 }
+
+/* Progressive web app install controls */
+.nav-install{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:40px;
+  padding:0 14px;
+  border:1px solid rgba(159,29,45,.28);
+  border-radius:6px;
+  background:#fff;
+  color:#9f1d2d;
+  font-size:11px;
+  font-weight:750;
+  letter-spacing:.02em;
+}
+.nav-install:hover{background:#fff5f6;border-color:#9f1d2d}
+.nav-install:disabled{opacity:.7;cursor:default}
+.install-help{
+  position:fixed;
+  inset:0;
+  z-index:120;
+  display:grid;
+  place-items:center;
+  padding:20px;
+  background:rgba(22,29,35,.52);
+}
+.install-help-card{
+  position:relative;
+  width:min(100%,420px);
+  padding:28px;
+  border-radius:14px;
+  background:#fff;
+  color:#202226;
+  box-shadow:0 20px 70px rgba(0,0,0,.2);
+}
+.install-help-kicker{color:#9f1d2d;font-size:10px;font-weight:800;letter-spacing:.14em}
+.install-help-card h3{margin:10px 28px 10px 0;font-size:22px;line-height:1.2}
+.install-help-card p{font-size:14px;line-height:1.65;color:#53606a}
+.install-help-card .install-help-note{margin-bottom:0;padding:12px;border-radius:8px;background:#f7f3f2;font-size:12px}
+.install-help-close{
+  position:absolute;top:14px;right:14px;display:grid;place-items:center;
+  width:36px;height:36px;border:0;border-radius:50%;background:#f4eeee;color:#30343a;
+}
+@media(max-width:760px){
+  .nav-install{width:100%;min-height:46px;justify-content:center;margin:8px 0}
+  .install-help-card{padding:24px 20px}
+}
