@@ -273,7 +273,7 @@ function App() {
   }, []);
 
   const displayed = donors;
-  const scrollTo = id => { document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); setMobileMenu(false); };
+  const scrollTo = id => { const target = document.getElementById(id); if (target) { const headerHeight = document.querySelector('.header')?.getBoundingClientRect().height || 0; const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - 12; window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' }); } setMobileMenu(false); };
   const toNepaliDigits = value => String(value).replace(/[0-9]/g, digit => '०१२३४५६७८९'[Number(digit)]);
   const locations = [
     ...Array.from({length:19},(_,index) => {
