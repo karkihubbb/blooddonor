@@ -308,30 +308,18 @@ function App() {
       <section className="hero" id="home"><div className="hero-grid"></div><div className="container hero-content">
         <div className="hero-copy"><div className="eyebrow"><span className="eyebrow-line"></span>{t.eyebrow}</div><h1>{t.title}<br/><em>{t.titleAccent}</em></h1><p className="hero-intro">{t.intro}</p><div className="hero-actions"><button className="button button-light" onClick={()=>scrollTo('find')}>{lang==='ne'?'रक्तदाता खोज्नुहोस्':'Find a Donor'}<Search size={17}/></button></div><div className="hero-proof"><div className="proof-icon"><HeartHandshake size={18}/></div><span>{t.local}</span><span className="proof-dot"></span><span>{lang==='ne'?'स्वैच्छिक · सहमतिमा आधारित':'VOLUNTARY · CONSENT-BASED'}</span></div></div>
 
-      <aside className="hero-directory-card" aria-label="Blood group directory preview"><div className="directory-card-top"><span className="directory-card-mark"><Droplet size={17}/></span><span>LOCAL DONOR DIRECTORY</span></div><div className="directory-card-place"><MapPin size={15}/><span>BIRATNAGAR, NEPAL</span></div><h2>{lang==='ne'?'आठ रक्त समूह':'Eight blood groups'}</h2><p>{lang==='ne'?'आफूलाई चाहिएको समूह छानेर खोजी सुरु गर्नुहोस्।':'Select the blood group you are looking for to begin.'}</p><div className="hero-blood-groups">{bloodGroups.map(g=><span key={g}>{g}</span>)}</div><div className="directory-card-foot"><ShieldCheck size={15}/><span>{lang==='ne'?'सहमति दिएका रक्तदाता मात्र':'Consenting donors only'}</span></div></aside></div><div className="hero-bottom"><div className="container hero-bottom-inner"><span>01 — CONNECT</span><span>02 — SUPPORT</span><span>03 — SAVE LIVES</span><span className="hero-bottom-caption">A LOCAL INITIATIVE FOR BIRATNAGAR</span></div></div></section>
-
-      <section className="campaign-section" id="campaigns">
-        <div className="container">
-          <div className="campaign-heading">
-            <div>
-              <div className="section-kicker">{lang==='ne'?'०२ / रक्तदान जनचेतना':'02 / BLOOD DONATION AWARENESS'}</div>
-              <h2>{lang==='ne'?'रक्तदानको महत्व बुझौँ।':'Every donation makes a difference.'}</h2>
-              <p>{lang==='ne'?'रक्तदानबारे जानकारी फैलाऔँ र जीवन बचाउने अभियानमा साथ दिऔँ।':'Explore our blood donation awareness campaigns and help spread the message across Biratnagar.'}</p>
-            </div>
-            <span className="campaign-count">01 — 02</span>
-          </div>
-          <div className="campaign-grid">
-            <article className="campaign-card">
-              <div className="campaign-image-wrap"><img src="./10170cd7-bd22-4b0d-aab4-f03464970431.jpg" alt={lang==='ne'?'रक्तदानको महत्व र रगतको थैली':'Blood donation awareness poster featuring a blood bag'} loading="lazy"/></div>
-              <div className="campaign-card-caption"><span>CAMPAIGN 01</span><h3>{lang==='ne'?'रगतको आवश्यकता र रक्तदानको महत्व':'Why every blood donation matters'}</h3></div>
-            </article>
-            <article className="campaign-card">
-              <div className="campaign-image-wrap"><img src="./f39a2f8d-2b61-490b-9eb5-6bd98de1fccb.jpg" alt={lang==='ne'?'माया र सहयोगमार्फत रक्तदानको सन्देश':'A heartfelt blood donation awareness poster'} loading="lazy"/></div>
-              <div className="campaign-card-caption"><span>CAMPAIGN 02</span><h3>{lang==='ne'?'एक थोपा रगत, जीवनभरको आशा':'A small act. A lasting impact.'}</h3></div>
-            </article>
-          </div>
+      <aside className="hero-awareness" aria-label="Blood donation awareness">
+        <div className="hero-awareness-gallery">
+          <figure className="hero-awareness-main"><img src="./10170cd7-bd22-4b0d-aab4-f03464970431.jpg" alt={lang==='ne'?'रक्तदानबारे जनचेतनामूलक सामग्री':'Blood donation awareness artwork'} loading="eager"/></figure>
+          <figure className="hero-awareness-side"><img src="./f39a2f8d-2b61-490b-9eb5-6bd98de1fccb.jpg" alt={lang==='ne'?'स्वैच्छिक रक्तदानको सन्देश':'A message encouraging voluntary blood donation'} loading="lazy"/></figure>
         </div>
-      </section>
+        <blockquote className="hero-awareness-quote">
+          <span>{lang==='ne'?'रक्तदान जनचेतना':'AWARENESS MATTERS'}</span>
+          <p>{lang==='ne'?'“रक्तदान गर्ने सोच, कसैका लागि ठूलो आशा बन्न सक्छ।”':'“A small act of kindness can bring hope when it matters most.”'}</p>
+        </blockquote>
+      </aside></div><div className="hero-bottom"><div className="container hero-bottom-inner"><span>01 — CONNECT</span><span>02 — SUPPORT</span><span>03 — SAVE LIVES</span><span className="hero-bottom-caption">A LOCAL INITIATIVE FOR BIRATNAGAR</span></div></div></section>
+
+
 
 
 
