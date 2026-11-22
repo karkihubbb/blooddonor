@@ -1054,3 +1054,107 @@ body { color: var(--ink); background: #fff; }
   .campaign-card{transition:none}
   .campaign-card:hover{transform:none}
 }
+
+
+/* Clean, minimal campaign gallery */
+.campaign-section{
+  padding:72px 0 78px;
+  background:#fff;
+  border:0;
+}
+.campaign-section:before{display:none}
+.campaign-section .container{max-width:1120px}
+.campaign-heading{
+  display:block;
+  text-align:left;
+  margin:0 0 30px;
+}
+.campaign-heading .section-kicker{
+  display:block;
+  color:#a32638;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.12em;
+}
+.campaign-heading .section-kicker:before,
+.campaign-heading .section-kicker:after{display:none}
+.campaign-heading h2{
+  margin:10px 0 8px;
+  max-width:none;
+  color:#202a33;
+  font-size:clamp(28px,3.2vw,38px);
+  line-height:1.2;
+  letter-spacing:-.8px;
+  font-weight:750;
+}
+.campaign-heading p{
+  max-width:620px;
+  color:#69737c;
+  font-size:14px;
+  line-height:1.7;
+}
+.campaign-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:24px;
+  align-items:start;
+}
+.campaign-card{
+  display:block;
+  overflow:hidden;
+  border:1px solid #e9e9e9;
+  border-radius:10px;
+  background:#fff;
+  box-shadow:0 3px 12px rgba(20,25,30,.04);
+  transition:box-shadow .2s ease;
+}
+.campaign-card:hover{
+  transform:none;
+  border-color:#e2d5d7;
+  box-shadow:0 7px 20px rgba(20,25,30,.07);
+}
+.campaign-image-wrap{
+  display:block;
+  height:auto;
+  padding:12px;
+  background:#fafafa;
+}
+.campaign-image-wrap img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:650px;
+  object-fit:contain;
+  object-position:center top;
+  filter:none;
+  border-radius:2px;
+}
+.campaign-card-caption{
+  display:block;
+  min-height:0;
+  padding:15px 18px 18px;
+  background:#fff;
+  border-top:1px solid #eee;
+}
+.campaign-card-caption span{
+  color:#a32638;
+  font-size:9px;
+  letter-spacing:.12em;
+}
+.campaign-card-caption h3{
+  margin:6px 0 0;
+  color:#242d35;
+  font-size:15px;
+  font-weight:650;
+  line-height:1.45;
+}
+@media(max-width:700px){
+  .campaign-section{padding:48px 0 54px}
+  .campaign-heading{margin-bottom:20px}
+  .campaign-heading h2{font-size:29px}
+  .campaign-heading p{font-size:13px}
+  .campaign-grid{grid-template-columns:1fr;gap:16px;max-width:520px;margin:0 auto}
+  .campaign-image-wrap{padding:9px}
+  .campaign-image-wrap img{max-height:none}
+  .campaign-card-caption{padding:13px 15px 15px}
+}
