@@ -264,6 +264,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .donor-phone-preview{display:flex;align-items:center;gap:8px;padding:10px 11px;border-radius:8px;background:#f5f7fa;color:#667085;font-size:15px;min-width:0}
 .donor-phone-preview span{font-weight:700;letter-spacing:1px}
 .donor-phone-preview small{margin-left:auto;font-size:10px;color:#858d9a;text-align:right}
+.donor-phone-link{text-decoration:none;cursor:pointer;transition:background .18s ease,color .18s ease}
+.donor-phone-link:hover{background:#eef2f6;color:#a51e30}
 .donor-card .donor-contact{min-height:48px;margin-top:10px;border:1px solid #cbd5e1;background:#fff;color:#344054;border-radius:9px;font-size:15px;font-weight:800}
 .donor-card .donor-contact:hover{border-color:#c62828;color:#b4232d;background:#fffafa}
 .donor-card .card-caption{display:block;margin-top:11px;color:#7b8492;font-size:11px;line-height:1.5}
