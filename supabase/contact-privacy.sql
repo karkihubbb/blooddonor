@@ -14,7 +14,7 @@ revoke all on public.donor_contact_requests from anon, authenticated;
 
 -- Remove broad row-level SELECT grants and grant only the public directory columns.
 revoke select on table public.donors from anon, authenticated;
-grant select (id, blood_group, location, is_available, created_at)
+grant select (id, blood_group, location, is_available, created_at, public_listing, is_approved)
   on table public.donors to anon, authenticated;
 
 -- Admin-only donor data access, including phone numbers.
