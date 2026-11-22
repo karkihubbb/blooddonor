@@ -227,6 +227,29 @@ function App() {
 
       <section className="intro-band" id="about"><div className="container intro-layout"><div><div className="section-kicker">01 / {t.about}</div><h2>{t.community}</h2></div><div className="intro-right"><p>{t.communityText}</p><div className="mini-stats"><div><strong>8</strong><span>{t.groups}</span></div><div><strong>01</strong><span>{t.mission}</span></div><div><strong>LOCAL</strong><span>{lang==='ne'?'स्थानीय समुदाय':'Community-led'}</span></div></div></div></div></section>
 
+      <section className="campaign-section" id="campaigns">
+        <div className="container">
+          <div className="campaign-heading">
+            <div>
+              <div className="section-kicker">{lang==='ne'?'०४ / रक्तदान जनचेतना':'04 / BLOOD DONATION AWARENESS'}</div>
+              <h2>{lang==='ne'?'रक्तदानको महत्व बुझौँ।':'Every donation makes a difference.'}</h2>
+              <p>{lang==='ne'?'रक्तदानबारे जानकारी फैलाऔँ र जीवन बचाउने अभियानमा साथ दिऔँ।':'Explore our blood donation awareness campaigns and help spread the message across Biratnagar.'}</p>
+            </div>
+            <span className="campaign-count">01 — 02</span>
+          </div>
+          <div className="campaign-grid">
+            <article className="campaign-card">
+              <div className="campaign-image-wrap"><img src="/10170cd7-bd22-4b0d-aab4-f03464970431.jpg" alt={lang==='ne'?'रक्तदानको महत्व र रगतको थैली':'Blood donation awareness poster featuring a blood bag'} loading="lazy"/></div>
+              <div className="campaign-card-caption"><span>CAMPAIGN 01</span><h3>{lang==='ne'?'रगतको आवश्यकता र रक्तदानको महत्व':'Why every blood donation matters'}</h3></div>
+            </article>
+            <article className="campaign-card">
+              <div className="campaign-image-wrap"><img src="/f39a2f8d-2b61-490b-9eb5-6bd98de1fccb.jpg" alt={lang==='ne'?'माया र सहयोगमार्फत रक्तदानको सन्देश':'A heartfelt blood donation awareness poster'} loading="lazy"/></div>
+              <div className="campaign-card-caption"><span>CAMPAIGN 02</span><h3>{lang==='ne'?'एक थोपा रगत, जीवनभरको आशा':'A small act. A lasting impact.'}</h3></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section className="quote-band"><div className="container quote-inner"><Quote size={28}/><blockquote>{lang==='ne'?'सानो सहयोगले पनि कसैको जीवनमा ठूलो आशा जगाउन सक्छ।':'A small act of kindness can bring a lifetime of hope.'}</blockquote><span>{lang==='ne'?'— विराटनगर रक्तदाता सञ्जाल':'— BiratnagarBloodNetwork'}</span></div></section>
 
       <section className="awareness-section section-pad" id="awareness"><div className="container"><div className="section-heading awareness-heading"><div><div className="section-kicker">05 / {t.awarenessEyebrow}</div><h2>{t.awarenessTitle}</h2><p>{t.awarenessText}</p></div><div className="section-number">05</div></div><div className="awareness-grid"><article><span className="awareness-icon"><BadgeCheck size={22}/></span><span className="awareness-index">01</span><h3>{t.fact1}</h3><p>{t.fact1Text}</p></article><article><span className="awareness-icon"><ShieldCheck size={22}/></span><span className="awareness-index">02</span><h3>{t.fact2}</h3><p>{t.fact2Text}</p></article><article><span className="awareness-icon"><HeartPulse size={22}/></span><span className="awareness-index">03</span><h3>{t.fact3}</h3><p>{t.fact3Text}</p></article></div><div className="safety-note"><ShieldCheck size={20}/><p>{t.safety}</p></div></div></section>
