@@ -5,7 +5,7 @@ import { ArrowRight, ArrowUpRight, BadgeCheck, Check, ChevronDown, Droplet, Hear
 import './style.css';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://fpibnalcztfghugtpjex.supabase.co';
-const supabasePublicKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabasePublicKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_1_zray2a3tJXitgo0Yr3mg_LY8FUBPb';
 
 // Accept a modern publishable key or a legacy JWT whose role is explicitly "anon".
 // Never allow service_role or sb_secret keys into browser code.
