@@ -6,8 +6,12 @@
 alter table public.donors
   add column if not exists age smallint,
   add column if not exists weight_kg numeric(5,2),
-  add column if not exists has_donated boolean not null default false,
+  add column if not exists has_donated boolean,
   add column if not exists last_donation_date date;
+
+-- NULL means a legacy record has no donation-history answer yet.
+alter table public.donors alter column has_donated drop not null;
+alter table public.donors alter column has_donated drop default;
 
 create or replace function public.is_valid_donor_name(p_name text)
 returns boolean
@@ -89,7 +93,8 @@ begin
     alter table public.donors
       add constraint donors_donation_history_check
       check (
-        (has_donated = false and last_donation_date is null)
+        (has_donated is null and last_donation_date is null)
+        or (has_donated = false and last_donation_date is null)
         or (has_donated = true and last_donation_date is not null)
       ) not valid;
   end if;
