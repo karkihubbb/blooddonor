@@ -272,3 +272,37 @@ img,svg{max-width:100%}
     margin-top:15px;
   }
 }
+
+
+/* Clear, thumb-friendly donor consent controls */
+.consent-card{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  width:100%;
+  padding:14px 15px;
+  border:1px solid #e7dfe0;
+  border-radius:10px;
+  background:#fff;
+  color:#26323b;
+  line-height:1.5;
+  cursor:pointer;
+}
+.consent-card input[type="checkbox"]{
+  width:20px;
+  height:20px;
+  min-width:20px;
+  margin:2px 0 0;
+  accent-color:#b42335;
+  cursor:pointer;
+}
+.consent-card span{display:grid;gap:3px;min-width:0}
+.consent-card strong{font-size:13px;font-weight:750}
+.consent-card small{font-size:11px;line-height:1.55;color:#68747e}
+.remember-consent{margin-top:12px;background:#faf8f8}
+@media(max-width:760px){
+  .consent-card{padding:14px;gap:12px;border-radius:10px}
+  .consent-card input[type="checkbox"]{width:22px;height:22px;min-width:22px}
+  .consent-card strong{font-size:13px}
+  .consent-card small{font-size:12px}
+}
