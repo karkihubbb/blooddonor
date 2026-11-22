@@ -411,3 +411,20 @@ img,svg{max-width:100%}
   }
   .remember-simple input{width:21px;height:21px;min-width:21px}
 }
+
+
+/* Keep the install action visible in the mobile header */
+.nav-install-mobile{display:none}
+@media(max-width:760px){
+  .nav-install-mobile{
+    display:inline-flex;
+    flex:0 0 auto;
+    width:auto;
+    min-height:40px;
+    margin:0 2px 0 auto;
+    padding:0 10px;
+    gap:5px;
+    font-size:11px;
+  }
+  .nav-links .nav-install{display:none}
+}
