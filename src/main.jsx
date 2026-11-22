@@ -66,6 +66,8 @@ function App() {
   const [adminMessage,setAdminMessage] = useState('');
   const [adminDonors,setAdminDonors] = useState([]);
   const [adminLoading,setAdminLoading] = useState(false);
+  const [contactingDonor,setContactingDonor] = useState('');
+  const [contactError,setContactError] = useState('');
   const [isAdmin,setIsAdmin] = useState(false);
   const [privacyOpen,setPrivacyOpen] = useState(false);
   const t = copy[lang];
@@ -92,7 +94,9 @@ function App() {
       setAdminLoading(false); return;
     }
     setIsAdmin(true);
-    const {data:donorData,error:donorError} = await supabase.from('donors').select('id,name,phone,blood_group,location,public_listing,is_available,is_approved,created_at').order('created_at',{ascending:false});
+    let {data:donorData,error:donorError} = await supabase.rpc('admin_list_donors');
+    // Compatibility while the privacy migration is being applied; the database RLS still controls this fallback.
+    if (donorError) ({data:donorData,error:donorError} = await supabase.from('donors').select('id,name,phone,blood_group,location,public_listing,is_available,is_approved,created_at').order('created_at',{ascending:false}));
     if (donorError) setAdminMessage('Could not load donor records. Check the database policies.');
     setAdminDonors(donorData || []);
     setAdminLoading(false);
@@ -132,6 +136,29 @@ function App() {
     }
   }
 
+  async function contactDonor(donor) {
+    if (!supabase || !donor?.id) return;
+    setContactError('');
+    setContactingDonor(donor.id);
+    try {
+      let requestToken = sessionStorage.getItem('brtblood-contact-session');
+      if (!requestToken) {
+        requestToken = crypto.randomUUID();
+        sessionStorage.setItem('brtblood-contact-session', requestToken);
+      }
+      const {data,error} = await supabase.rpc('request_donor_contact', {
+        p_donor_id: donor.id,
+        p_request_token: requestToken
+      });
+      if (error || !data) throw error || new Error('Contact unavailable');
+      window.location.href = `tel:${data}`;
+    } catch (error) {
+      setContactError('Contact details are temporarily unavailable. Please try again later or contact a local hospital.');
+    } finally {
+      setContactingDonor('');
+    }
+  }
+
   async function searchDonors(e) {
     e?.preventDefault();
     setLoading(true); setSearchDone(true); setSearchError(false);
@@ -139,7 +166,7 @@ function App() {
       setDonors([]);
       setLoading(false); return;
     }
-    let query = supabase.from('donors').select('id,name,phone,blood_group,location,is_available,created_at').eq('is_available',true).eq('public_listing',true).eq('is_approved',true).order('created_at',{ascending:false});
+    let query = supabase.from('donors').select('id,name,blood_group,location,is_available,created_at').eq('is_available',true).eq('public_listing',true).eq('is_approved',true).order('created_at',{ascending:false});
     if (group !== 'all') query = query.eq('blood_group',group);
     if (searchLocation.trim()) query = query.ilike('location',`%${searchLocation.trim()}%`);
     const {data,error} = await query.limit(60);
@@ -215,7 +242,7 @@ function App() {
         <form className="search-panel portal-search" onSubmit={searchDonors}><div className="field"><label>{t.bloodGroup}</label><div className="select-wrap"><Droplet size={16}/><select value={group} onChange={e=>setGroup(e.target.value)}><option value="all">{t.allGroups}</option>{bloodGroups.map(g=><option key={g}>{g}</option>)}</select><ChevronDown size={15}/></div></div><div className="field"><label>{t.location}</label><input value={searchLocation} onChange={e=>setSearchLocation(e.target.value)} placeholder={lang==='ne'?'विराटनगर, वडा वा टोल लेख्नुहोस्':'Enter city, ward or area'}/></div><button className="button button-red search-submit" type="submit"><Search size={17}/>{t.searchBtn}</button></form>
         <div className="directory-meta"><div><span className="status-dot"></span><strong>{t.available}</strong><span className="meta-count">{searchDone?displayed.length:0}</span></div><span className="sample-label">{!supabase?t.demo:t.online}</span></div>
         {!supabase && <div className="preview-notice"><span><ShieldCheck size={16}/></span><div><strong>{t.preview}</strong><p>{t.backendMissing} {t.demoNote}</p></div></div>}
-        {loading ? <div className="empty-state">Loading…</div> : searchError ? <div className="empty-state"><h3>{lang==='ne'?'सूची उपलब्ध छैन':'Directory temporarily unavailable'}</h3><p>{lang==='ne'?'डाटाबेस जडान वा अनुमति जाँच गर्न प्रशासकलाई सम्पर्क गर्नुहोस्।':'Please ask the site administrator to check the database connection and permissions.'}</p></div> : displayed.length ? <div className="donor-grid">{displayed.map(d=><article className="donor-card" key={d.id}><div className="donor-card-top"><div className="blood-badge">{d.blood_group}</div><span className="available-tag"><span></span>{t.available}</span></div><h3>{d.name}</h3><p className="donor-location"><MapPin size={15}/>{d.location}</p><a className="donor-phone-preview donor-phone-link" href={`tel:${d.phone}`} aria-label={`${lang==='ne'?'फोन गर्नुहोस्':'Call'} ${d.name}`}><Phone size={15}/><span>{d.phone}</span><small>{lang==='ne'?'फोन गर्न छुनुहोस्':'Tap number to call'}</small></a><a className="donor-contact" href={`tel:${d.phone}`}><Phone size={17}/>{lang==='ne'?'रक्तदातालाई फोन गर्नुहोस्':'Call donor'}</a><span className="card-caption">{lang==='ne'?'पहिले अस्पतालसँग उपलब्धता पुष्टि गर्नुहोस्':'Please confirm availability with the hospital'}</span></article>)}</div> : searchDone ? <div className="empty-state"><div className="empty-icon"><Search size={23}/></div><h3>{t.noResults}</h3><p>{t.noResultsText}</p></div> : <div className="empty-state search-prompt"><div className="empty-icon"><Search size={23}/></div><h3>{lang==='ne'?'रक्त समूह र स्थान छान्नुहोस्':'Choose a blood group and area'}</h3><p>{lang==='ne'?'मिल्दो रक्तदाता हेर्न माथिको खोजी प्रयोग गर्नुहोस्।':'Use the search above to see matching registered donors.'}</p></div>}
+        {contactError && <div className="form-message error" role="status">{contactError}</div>}{loading ? <div className="empty-state">Loading…</div> : searchError ? <div className="empty-state"><h3>{lang==='ne'?'सूची उपलब्ध छैन':'Directory temporarily unavailable'}</h3><p>{lang==='ne'?'डाटाबेस जडान वा अनुमति जाँच गर्न प्रशासकलाई सम्पर्क गर्नुहोस्।':'Please ask the site administrator to check the database connection and permissions.'}</p></div> : displayed.length ? <div className="donor-grid">{displayed.map(d=><article className="donor-card" key={d.id}><div className="donor-card-top"><div className="blood-badge">{d.blood_group}</div><span className="available-tag"><span></span>{t.available}</span></div><h3>{d.name}</h3><p className="donor-location"><MapPin size={15}/>{d.location}</p><button type="button" className="donor-phone-preview donor-phone-link" onClick={()=>contactDonor(d)} disabled={contactingDonor===d.id} aria-label={`${lang==='ne'?'फोन गर्नुहोस्':'Call'} ${d.name}`}><Phone size={15}/><span>{contactingDonor===d.id?(lang==='ne'?'जडान हुँदै…':'Connecting…'):(lang==='ne'?'नम्बर हेर्नुहोस्':'Request phone number')}</span><small>{lang==='ne'?'सहमति र उपलब्धता जाँचपछि':'Shown after consent and availability check'}</small></button><button type="button" className="donor-contact" onClick={()=>contactDonor(d)} disabled={contactingDonor===d.id}><Phone size={17}/>{lang==='ne'?'रक्तदातालाई फोन गर्नुहोस्':'Call donor'}</button><span className="card-caption">{lang==='ne'?'पहिले अस्पतालसँग उपलब्धता पुष्टि गर्नुहोस्':'Please confirm availability with the hospital'}</span></article>)}</div> : searchDone ? <div className="empty-state"><div className="empty-icon"><Search size={23}/></div><h3>{t.noResults}</h3><p>{t.noResultsText}</p></div> : <div className="empty-state search-prompt"><div className="empty-icon"><Search size={23}/></div><h3>{lang==='ne'?'रक्त समूह र स्थान छान्नुहोस्':'Choose a blood group and area'}</h3><p>{lang==='ne'?'मिल्दो रक्तदाता हेर्न माथिको खोजी प्रयोग गर्नुहोस्।':'Use the search above to see matching registered donors.'}</p></div>}
       </div></section>
 
       <section className="hero" id="home"><div className="hero-grid"></div><div className="container hero-content">
