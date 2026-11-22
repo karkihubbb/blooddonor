@@ -56,7 +56,10 @@ begin
     raise exception 'Please check the weight entered';
   end if;
 
-  if new.has_donated is null then\n    raise exception 'Please choose whether you have donated whole blood before';\n  end if;\n  if new.has_donated and new.last_donation_date is null then
+  if new.has_donated is null then
+    raise exception 'Please choose whether you have donated whole blood before';
+  end if;
+  if new.has_donated and new.last_donation_date is null then
     raise exception 'Please provide the last whole-blood donation date';
   end if;
   if not new.has_donated and new.last_donation_date is not null then
@@ -76,7 +79,11 @@ before insert
 on public.donors
 for each row execute function public.validate_donor_registration_fields();
 
--- Existing profiles are not treated as age-confirmed; remove them from public view\n-- until the project owner has a safe way to reconfirm their details.\nupdate public.donors set is_approved = false where over_18 = false;\n\n-- The public card intentionally exposes only consented directory fields.
+-- Existing profiles are not treated as age-confirmed; remove them from public view
+-- until the project owner has a safe way to reconfirm their details.
+update public.donors set is_approved = false where over_18 = false;
+
+-- The public card intentionally exposes only consented directory fields.
 -- Age declaration and weight remain private; phone is public because the registration
 -- consent explicitly says anyone can tap it to call.
 revoke select on table public.donors from anon, authenticated;
