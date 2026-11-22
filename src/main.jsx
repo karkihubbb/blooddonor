@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
-import { ArrowRight, ArrowUpRight, BadgeCheck, Check, ChevronDown, Droplet, HeartHandshake, HeartPulse, MapPin, Menu, Search, ShieldCheck, X, LockKeyhole, Trash2, LogIn, LogOut, FileText, Eye, UserCheck, Phone, Quote } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ArrowDownToLine, BadgeCheck, Check, ChevronDown, Droplet, HeartHandshake, HeartPulse, MapPin, Menu, Search, ShieldCheck, X, LockKeyhole, Trash2, LogIn, LogOut, FileText, Eye, UserCheck, Phone, Quote } from 'lucide-react';
 import './style.css';
 import './mobile-polish.css';
 
@@ -147,8 +147,33 @@ function App() {
   const [contactError,setContactError] = useState('');
   const [isAdmin,setIsAdmin] = useState(false);
   const [privacyOpen,setPrivacyOpen] = useState(false);
+  const [installPrompt,setInstallPrompt] = useState(null);
+  const [installHelpOpen,setInstallHelpOpen] = useState(false);
+  const [appInstalled,setAppInstalled] = useState(() => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
   const t = copy[lang];
   const localGuide = localGuideCopy[lang];
+  useEffect(() => {
+    const handleBeforeInstall = event => { event.preventDefault(); setInstallPrompt(event); };
+    const handleInstalled = () => { setAppInstalled(true); setInstallPrompt(null); setInstallHelpOpen(false); };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    window.addEventListener('appinstalled', handleInstalled);
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(error => console.warn('App install support unavailable:', error));
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+      window.removeEventListener('appinstalled', handleInstalled);
+    };
+  }, []);
+
+  async function installApp() {
+    if (installPrompt) {
+      installPrompt.prompt();
+      const choice = await installPrompt.userChoice;
+      if (choice?.outcome === 'accepted') setInstallPrompt(null);
+      return;
+    }
+    setInstallHelpOpen(open => !open);
+  }
+
   useEffect(() => { document.documentElement.lang = lang; document.title = lang === 'ne' ? 'विराटनगर रक्तदाता सञ्जाल | विराटनगरमा रक्तदाता खोज्नुहोस्' : 'Biratnagar Blood Donors | BiratnagarBloodNetwork'; try { localStorage.setItem('rakta-language-v2',lang); } catch {} }, [lang]);
 
   useEffect(() => {
@@ -321,9 +346,18 @@ function App() {
     <div className="topline"><div className="container topline-inner"><span><span className="pulse"></span>{t.live}</span><span className="topline-right"><MapPin size={13}/> Biratnagar, Nepal <span className="top-divider"></span><div className="language-switch"><button className={lang==='ne'?'active':''} onClick={()=>setLang('ne')}>नेपाली</button><span>|</span><button className={lang==='en'?'active':''} onClick={()=>setLang('en')}>English</button></div></span></div></div>
     <header className="header"><div className="container nav-wrap">
       <a className="brand" href="#" onClick={e=>{e.preventDefault();scrollTo('home')}}><span className="brand-mark"><Droplet size={24} fill="currentColor"/></span><span><strong>{lang==='ne'?'विराटनगर रक्तदाता सञ्जाल':'BiratnagarBloodNetwork'}</strong><small>{lang==='ne'?'विराटनगर, नेपाल':'BIRATNAGAR, NEPAL'}</small></span></a>
-      <nav className={mobileMenu?'nav-links open':'nav-links'}><button onClick={()=>scrollTo('home')}>{lang==='ne'?'गृहपृष्ठ':'Home'}</button><button className="nav-register" onClick={()=>scrollTo('donate')}>{lang==='ne'?'रक्तदाता दर्ता':'Donor Registration'}</button><button onClick={()=>scrollTo('find')}>{lang==='ne'?'रक्तदाता खोज्नुहोस्':'Find Donors'}</button><button onClick={()=>scrollTo('awareness')}>{lang==='ne'?'रक्तदान जानकारी':'Donation Info'}</button><button onClick={()=>scrollTo('about')}>{t.about}</button><button onClick={()=>scrollTo('privacy')}>{lang==='en'?'Privacy':'गोपनीयता'}</button><button className="nav-cta" onClick={()=>scrollTo('donate')}>{t.become}<ArrowUpRight size={15}/></button></nav>
+      <nav className={mobileMenu?'nav-links open':'nav-links'}><button onClick={()=>scrollTo('home')}>{lang==='ne'?'गृहपृष्ठ':'Home'}</button><button className="nav-register" onClick={()=>scrollTo('donate')}>{lang==='ne'?'रक्तदाता दर्ता':'Donor Registration'}</button><button onClick={()=>scrollTo('find')}>{lang==='ne'?'रक्तदाता खोज्नुहोस्':'Find Donors'}</button><button onClick={()=>scrollTo('awareness')}>{lang==='ne'?'रक्तदान जानकारी':'Donation Info'}</button><button onClick={()=>scrollTo('about')}>{t.about}</button><button onClick={()=>scrollTo('privacy')}>{lang==='en'?'Privacy':'गोपनीयता'}</button><button className="nav-install" onClick={installApp} disabled={appInstalled}>{appInstalled?(lang==='ne'?'एप स्थापना भयो':'App installed'):(lang==='ne'?'एप इन्स्टल गर्नुहोस्':'Install app')}<ArrowDownToLine size={15}/></button><button className="nav-cta" onClick={()=>scrollTo('donate')}>{t.become}<ArrowUpRight size={15}/></button></nav>
       <button className="mobile-toggle" onClick={()=>setMobileMenu(!mobileMenu)} aria-label="Toggle menu">{mobileMenu?<X/>:<Menu/>}</button>
     </div></header>
+    {installHelpOpen && !appInstalled && <div className="install-help" role="dialog" aria-label={lang==='ne'?'एप इन्स्टल गर्ने तरिका':'How to install the app'}>
+      <div className="install-help-card">
+        <button className="install-help-close" onClick={()=>setInstallHelpOpen(false)} aria-label="Close install instructions"><X size={18}/></button>
+        <span className="install-help-kicker">{lang==='ne'?'मोबाइल एप':'MOBILE APP'}</span>
+        <h3>{lang==='ne'?'होम स्क्रिनमा राख्नुहोस्':'Add to your home screen'}</h3>
+        <p>{lang==='ne'?'Android मा Chrome खोल्नुहोस्, माथिको ⋮ मेनु थिच्नुहोस् र “Install app” वा “Add to Home screen” छान्नुहोस्।':'On Android, open this site in Chrome, tap the ⋮ menu, then choose “Install app” or “Add to Home screen”.'}</p>
+        <p className="install-help-note">{lang==='ne'?'यदि Install app देखिएन भने “Add to Home screen” विकल्प प्रयोग गर्नुहोस्।':'If “Install app” is not shown, use “Add to Home screen”.'}</p>
+      </div>
+    </div>}
 
     <main>
       <section className="directory-section section-pad" id="find"><div className="container"><div className="section-heading"><div><div className="section-kicker">{lang==='ne'?'०१ / रक्तदाताको सूची':'01 / THE DIRECTORY'}</div><h2>{t.searchTitle}</h2><p>{t.searchText}</p></div><div className="section-number">02</div></div>
