@@ -18,6 +18,25 @@ create table if not exists public.donors (
 -- New donor profiles remain hidden until an administrator reviews consent and approves them.
 alter table public.donors add column if not exists is_approved boolean not null default false;
 
+-- Automatically approve a donor for public listing when they explicitly opt in.
+-- Admins can still pause availability, remove records, or revoke public listing.
+create or replace function public.auto_approve_public_donor()
+returns trigger
+language plpgsql
+set search_path = public
+as $
+begin
+  new.is_approved := coalesce(new.public_listing, false);
+  return new;
+end;
+$;
+
+drop trigger if exists donors_auto_approve_public_listing on public.donors;
+create trigger donors_auto_approve_public_listing
+before insert or update of public_listing on public.donors
+for each row execute function public.auto_approve_public_donor();
+
+
 create table if not exists public.blood_requests (
   id uuid primary key default gen_random_uuid(),
   contact_name text not null check (char_length(contact_name) between 2 and 90),
