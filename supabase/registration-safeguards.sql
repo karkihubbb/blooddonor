@@ -18,7 +18,7 @@ alter table public.donors
   drop constraint if exists donors_donation_history_consistent,
   add constraint donors_donation_history_consistent check (
     (has_donated is null and last_donation_date is null)
-    or (has_donated = true and last_donation_date is not null)
+    or (has_donated = true)
     or (has_donated = false and last_donation_date is null)
   ) not valid;
 
@@ -57,10 +57,7 @@ begin
   end if;
 
   if new.has_donated is null then
-    raise exception 'Please choose whether you have donated whole blood before';
-  end if;
-  if new.has_donated and new.last_donation_date is null then
-    raise exception 'Please provide the last whole-blood donation date';
+    raise exception 'Please choose whether you have donated blood before';
   end if;
   if not new.has_donated and new.last_donation_date is not null then
     raise exception 'Donation history does not match the selected answer';
