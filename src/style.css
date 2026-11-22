@@ -210,7 +210,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .nav-wrap{min-height:82px;gap:22px}
 .nav-links{gap:17px}
 .nav-links button{white-space:nowrap}
-.nav-links .nav-register{color:#a51e30;font-weight:900}
+
 .nav-links .nav-cta{border-radius:8px}
 .action-section{background:#f8f5f3;color:#202020;padding:58px 0}
 .action-section:before{display:none}
@@ -714,7 +714,7 @@ body { color: var(--ink); background: #fff; }
 .brand-mark { border-radius: 7px; }
 .nav-links { gap: 21px; }
 .nav-links button { font-size: 13px; color: #46525d; }
-.nav-links .nav-register { color: var(--rakta); font-weight: 800; }
+
 .nav-links .nav-cta { border-radius: 4px; padding-inline: 17px; }
 .hero { background: #f5f6f6; border-bottom: 1px solid #e5e8ea; }
 .hero-content {
