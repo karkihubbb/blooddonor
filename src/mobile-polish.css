@@ -1,0 +1,211 @@
+/* Mobile-first refinement: compact, usable civic-service website */
+:root{
+  --rakta:#982536;
+  --rakta-dark:#761b2a;
+  --ink:#202a33;
+  --muted:#65717c;
+  --line:#e3e7ea;
+  --soft:#f6f7f8;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{overflow-x:hidden;scroll-padding-top:78px}
+body{min-width:320px;max-width:100%;overflow-x:hidden}
+#root,.site-shell,main{width:100%;min-width:0;overflow-x:clip}
+img,svg{max-width:100%}
+.container{width:min(1160px,calc(100% - 48px));margin-inline:auto}
+
+/* Remove the slide-deck treatment and keep section hierarchy quiet */
+.section-number,.campaign-count{display:none!important}
+.section-kicker{font-size:10px;line-height:1.5;letter-spacing:.12em;font-weight:750;color:var(--rakta)}
+.section-heading{align-items:flex-start;gap:12px}
+.section-heading>div{min-width:0}
+.section-heading h2,.intro-layout h2,.request-heading h2,.action-copy h2,.privacy-layout h2{
+  font-size:clamp(28px,3.3vw,40px);line-height:1.2;letter-spacing:-.7px
+}
+.section-heading p,.intro-right>p,.request-heading>p,.action-copy>p{font-size:15px;line-height:1.75}
+.section-pad,.intro-band,.action-section,.photo-story{padding-block:64px}
+
+/* Header stays tidy instead of squeezing the navigation */
+.topline-inner{min-width:0;gap:10px}
+.topline-right{min-width:0;flex-wrap:wrap}
+.header,.nav-wrap{min-width:0}
+.brand{min-width:0;max-width:60%}
+.brand>span:last-child{min-width:0}
+.brand strong{display:block;overflow-wrap:anywhere;font-size:clamp(14px,1.5vw,19px)}
+.nav-links{min-width:0}
+.mobile-toggle{flex:0 0 auto}
+
+/* Calm, proportionate homepage hero */
+.hero-content{min-height:0;padding-block:58px 48px;grid-template-columns:minmax(0,1.1fr) minmax(260px,.75fr);gap:clamp(24px,5vw,68px)}
+.hero h1{font-size:clamp(38px,4.8vw,60px);line-height:1.12;letter-spacing:-1.5px}
+.hero-intro{font-size:16px;line-height:1.8}
+.hero-proof{flex-wrap:wrap;line-height:1.6;gap:8px}
+.hero-directory-card{min-width:0}
+.hero-bottom-inner{min-width:0;flex-wrap:wrap;gap:10px 22px}
+
+/* Directory controls must never force the page wider than the screen */
+.directory-section{padding-block:62px 70px}
+.directory-section .section-heading{margin-bottom:24px}
+.portal-search{
+  width:100%;max-width:930px;min-width:0;
+  grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr) auto;
+  align-items:end;gap:12px;padding:18px
+}
+.portal-search .field{width:100%;min-width:0}
+.portal-search .field input,
+.portal-search .field select,
+.portal-search .select-wrap,
+.portal-search .input-wrap{
+  display:flex;width:100%;min-width:0;max-width:100%;box-sizing:border-box
+}
+.portal-search .select-wrap select{width:100%;min-width:0;max-width:100%;flex:1 1 0}
+.portal-search .field input{display:block}
+.portal-search .search-submit{min-width:0;white-space:normal}
+.directory-meta,.donor-grid{width:100%;min-width:0}
+.donor-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.donor-card{min-width:0}
+.donor-phone-preview{min-width:0;flex-wrap:wrap}
+.donor-phone-preview span{overflow-wrap:anywhere}
+.donor-phone-preview small{margin-left:auto}
+
+/* Forms: comfortable touch targets without oversized fields */
+.form-card{min-width:0}
+.stack-form,.form-row,.form-row .field{min-width:0}
+.stack-form input,.stack-form select,.portal-search input,.portal-search select{max-width:100%}
+.form-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+.blood-picker{grid-template-columns:repeat(4,minmax(0,1fr))}
+.blood-choice{min-width:0}
+.consent span{min-width:0;overflow-wrap:anywhere}
+
+/* Smaller tablet and phone layouts */
+@media(max-width:900px){
+  .container{width:calc(100% - 40px)}
+  .nav-wrap{gap:12px}
+  .nav-links{gap:8px}
+  .nav-links button{font-size:11px;padding-inline:4px}
+  .brand strong{font-size:15px}
+  .hero-content{grid-template-columns:minmax(0,1fr) minmax(230px,.72fr);gap:22px;padding-block:48px 40px}
+  .hero h1{font-size:clamp(36px,5vw,48px)}
+  .hero-directory-card{padding:19px}
+  .portal-search{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+  .portal-search .search-submit{grid-column:1/-1;width:100%}
+  .donor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  html{scroll-padding-top:68px}
+  .container{width:calc(100% - 32px)}
+  .topline{font-size:10px}
+  .topline-inner{padding-block:7px;align-items:center}
+  .topline-right{gap:6px;font-size:10px}
+  .language-switch{font-size:10px}
+  .header,.nav-wrap{min-height:64px}
+  .brand{max-width:calc(100% - 54px);gap:8px}
+  .brand-mark{width:34px;height:34px;flex:0 0 34px}
+  .brand strong{font-size:14px;line-height:1.25}
+  .brand small{font-size:8px}
+  .mobile-toggle{display:grid;place-items:center;width:42px;height:42px}
+  .nav-links{top:64px;left:0;right:0;padding:10px 16px 16px;background:#fff}
+  .nav-links button{min-height:46px;font-size:14px;padding:10px 8px}
+  .nav-links .nav-cta{margin-top:7px}
+  .hero-content{display:flex;flex-direction:column;align-items:stretch;gap:24px;padding:38px 0 30px}
+  .hero-copy{max-width:none;width:100%}
+  .eyebrow{font-size:9px;letter-spacing:.14em}
+  .hero h1{font-size:clamp(34px,9vw,43px);line-height:1.16;letter-spacing:-1px;margin:15px 0 12px}
+  .hero-intro{font-size:14px;line-height:1.75}
+  .hero-actions{display:flex;margin-top:19px}
+  .hero-actions .button{width:auto;min-height:46px;padding:12px 17px;font-size:13px}
+  .hero-proof{margin-top:19px;font-size:9px;letter-spacing:.05em}
+  .hero-directory-card{width:100%;max-width:none;padding:17px;border-radius:8px}
+  .directory-card-place{margin-top:17px}
+  .hero-directory-card h2{font-size:23px}
+  .hero-blood-groups{gap:7px;margin:15px 0}
+  .hero-blood-groups span{min-height:38px}
+  .hero-bottom-inner{padding-block:11px;gap:8px 14px;font-size:8px}
+  .hero-bottom-caption{display:none}
+  .section-pad,.intro-band,.action-section,.photo-story{padding-block:43px}
+  .section-kicker{font-size:9px}
+  .section-heading{display:block;margin-bottom:19px}
+  .section-heading h2,.intro-layout h2,.request-heading h2,.action-copy h2,.privacy-layout h2{font-size:27px;line-height:1.22}
+  .section-heading p,.intro-right>p,.request-heading>p,.action-copy>p{font-size:14px;line-height:1.7;margin-top:8px}
+  .directory-section{padding:43px 0 48px}
+  .portal-search{display:grid;grid-template-columns:minmax(0,1fr);padding:14px;gap:12px;border-radius:8px}
+  .portal-search .field label{font-size:12px}
+  .portal-search .field input,.portal-search .field select,.portal-search .select-wrap{height:46px;min-height:46px;font-size:14px}
+  .portal-search .search-submit{grid-column:auto;width:100%;min-height:46px}
+  .directory-meta{margin-top:18px;gap:10px}
+  .directory-meta strong{font-size:12px}
+  .sample-label{font-size:8px}
+  .donor-grid{grid-template-columns:minmax(0,1fr);max-width:540px;gap:10px;margin-top:14px}
+  .donor-card{padding:15px;border-radius:8px}
+  .donor-card .blood-badge{min-width:42px;min-height:42px;font-size:16px}
+  .donor-card h3{font-size:17px;margin-top:12px}
+  .donor-card .donor-location{font-size:12px}
+  .donor-phone-preview{gap:7px;padding:9px;font-size:12px}
+  .donor-phone-preview small{font-size:9px}
+  .donor-card .donor-contact{min-height:42px;font-size:12px}
+  .donor-card .card-caption{font-size:9px}
+  .action-section{padding:44px 0}
+  .action-layout,.request-layout,.intro-layout,.privacy-layout{grid-template-columns:minmax(0,1fr);gap:22px}
+  .action-copy{max-width:none}
+  .action-copy h2{font-size:29px}
+  .action-aside{font-size:11px;margin-top:16px}
+  .form-card{padding:18px 15px;border-radius:8px}
+  .form-card-head{padding-bottom:14px;margin-bottom:15px}
+  .form-card-head h3{font-size:19px}
+  .stack-form{gap:12px}
+  .stack-form .field label{font-size:12px}
+  .stack-form .field input,.stack-form .field select{height:44px;min-height:44px;font-size:16px}
+  .form-row{grid-template-columns:minmax(0,1fr);gap:12px}
+  .blood-picker{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .blood-choice{min-height:40px;font-size:13px}
+  .consent{font-size:11px;line-height:1.55}
+  .form-privacy{font-size:10px}
+  .form-submit{width:100%;min-height:46px}
+  .intro-layout h2{max-width:none}
+  .mini-stats{gap:18px;flex-wrap:wrap}
+  .mini-stats strong{font-size:18px}
+  .mini-stats span{font-size:9px}
+  .quote-band{padding:28px 0}
+  .quote-inner blockquote{font-size:19px}
+  .awareness-grid{grid-template-columns:minmax(0,1fr);gap:10px}
+  .awareness-grid article{padding:17px;min-height:0}
+  .awareness-grid h3{font-size:15px;margin:14px 0 6px}
+  .awareness-grid p,.safety-note p{font-size:12px;line-height:1.7}
+  .safety-note{padding:13px;gap:9px}
+  .privacy-points{gap:10px}
+  .privacy-points article{padding:13px;gap:10px}
+  .privacy-points b{font-size:13px}
+  .privacy-points p,.privacy-full p{font-size:11px;line-height:1.7}
+  .privacy-full{margin-top:25px;padding-top:18px}
+  .footer{padding-bottom:25px}
+  .footer-main{padding-top:35px;padding-bottom:28px;gap:23px}
+  .footer-links{gap:28px;flex-wrap:wrap}
+  .footer-links>div{min-width:0}
+  .footer-links p,.footer-links button{font-size:11px}
+  .footer-bottom{font-size:9px;gap:8px;line-height:1.5}
+  .campaign-section{padding:42px 0 46px}
+  .campaign-heading{margin-bottom:18px}
+  .campaign-heading h2{font-size:27px;line-height:1.2}
+  .campaign-heading p{font-size:12px}
+  .campaign-grid{grid-template-columns:minmax(0,1fr);gap:14px}
+  .campaign-card{border-radius:8px}
+  .campaign-image-wrap{padding:7px}
+  .campaign-card-caption{padding:12px 13px}
+  .campaign-card-caption h3{font-size:14px}
+  .admin-table-wrap{max-width:100%;overflow-x:auto}
+  .urgent-float{left:12px;right:12px;bottom:10px}
+}
+@media(max-width:380px){
+  .container{width:calc(100% - 26px)}
+  .topline-right>svg,.top-divider{display:none}
+  .brand strong{font-size:13px}
+  .hero h1{font-size:33px}
+  .hero-directory-card{padding:14px}
+  .directory-meta{align-items:flex-start}
+  .sample-label{max-width:100px;text-align:right}
+  .donor-phone-preview small{display:none}
+  .footer-links{gap:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
