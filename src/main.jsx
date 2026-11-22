@@ -234,7 +234,7 @@ function App() {
     if (donorForm.over_18 !== 'yes') { setDonorStatus('invalidAge'); return; }
     if (!Number.isFinite(weight) || weight < 45 || weight > 250) { setDonorStatus('invalidWeight'); return; }
     if (donorForm.has_donated && !donorForm.dont_remember_date && !donorForm.last_donation_date) { setDonorStatus('missingDonationDate'); return; }
-    if (!donorForm.has_donated && (donorForm.last_donation_date || donorForm.donation_date_known)) { setDonorStatus('invalidDonationHistory'); return; }
+    if (!donorForm.has_donated && (donorForm.last_donation_date || donorForm.dont_remember_date)) { setDonorStatus('invalidDonationHistory'); return; }
     if (donorForm.last_donation_date && donorForm.last_donation_date > new Date().toISOString().slice(0,10)) { setDonorStatus('invalidDonationHistory'); return; }
     if (!donorForm.blood_group) { setDonorStatus('invalidBloodGroup'); return; }
     if (!donorForm.consent) { setDonorStatus('consentRequired'); return; }
