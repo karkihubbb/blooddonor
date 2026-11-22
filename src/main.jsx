@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { createClient } from '@supabase/supabase-js';
 import { ArrowRight, ArrowUpRight, BadgeCheck, Check, ChevronDown, Droplet, HeartHandshake, HeartPulse, MapPin, Menu, Search, ShieldCheck, X, LockKeyhole, Trash2, LogIn, LogOut, FileText, Eye, UserCheck, Phone, Quote } from 'lucide-react';
 import './style.css';
+import './redesign.css';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://fpibnalcztfghugtpjex.supabase.co';
 const supabasePublicKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
