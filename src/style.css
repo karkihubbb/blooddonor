@@ -1257,3 +1257,68 @@ body {
 .hero-awareness-quote p{margin:8px 0 0;color:#303b44;font-family:"Manrope","Noto Sans Devanagari",sans-serif;font-size:15px;font-weight:700;line-height:1.6}
 @media(max-width:900px){.hero-awareness{max-width:100%}.hero-awareness-main img{height:300px}.hero-awareness-side img{height:245px}}
 @media(max-width:700px){.hero-awareness{max-width:520px;margin:4px auto 0}.hero-awareness-gallery{grid-template-columns:1.08fr .92fr;gap:9px}.hero-awareness-gallery figure{padding:6px;border-radius:6px}.hero-awareness-main img{height:245px}.hero-awareness-side{transform:translateY(14px)}.hero-awareness-side img{height:205px}.hero-awareness-quote{margin:26px 0 0 5%;padding:14px 16px}.hero-awareness-quote p{font-size:14px}}
+
+
+/* Final alignment pass for the homepage awareness artwork */
+.hero-awareness{
+  width:100%;
+  max-width:500px;
+  justify-self:end;
+  align-self:center;
+  animation:none;
+}
+.hero-awareness-gallery{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  align-items:stretch;
+}
+.hero-awareness-gallery figure{
+  width:100%;
+  height:clamp(270px,31vw,350px);
+  min-height:0;
+  margin:0;
+  padding:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background:#f8f4f2;
+  border:1px solid rgba(255,255,255,.72);
+  border-radius:12px;
+  box-shadow:0 16px 38px rgba(49,8,17,.2);
+}
+.hero-awareness-main img,
+.hero-awareness-side img{
+  display:block;
+  width:100%;
+  height:100%;
+  max-height:none;
+  object-fit:contain;
+  object-position:center;
+  border-radius:5px;
+}
+.hero-awareness-side{transform:none}
+.hero-awareness-quote{
+  width:88%;
+  margin:18px 0 0 auto;
+  padding:16px 20px;
+  border:1px solid rgba(255,255,255,.55);
+  border-left:3px solid #f0bfc1;
+  border-radius:7px;
+  background:rgba(255,255,255,.97);
+  box-shadow:0 12px 28px rgba(49,8,17,.14);
+}
+.hero-awareness-quote span{color:#9f1d2d}
+.hero-awareness-quote p{font-size:14px;line-height:1.55}
+@media(max-width:900px){
+  .hero-awareness{max-width:560px}
+  .hero-awareness-gallery figure{height:clamp(250px,38vw,320px)}
+}
+@media(max-width:700px){
+  .hero-awareness{max-width:520px;margin:8px auto 0}
+  .hero-awareness-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .hero-awareness-gallery figure{height:clamp(220px,62vw,285px);padding:8px;border-radius:9px}
+  .hero-awareness-quote{width:94%;margin:15px 0 0 auto;padding:13px 15px}
+  .hero-awareness-quote p{font-size:13px}
+}
