@@ -104,7 +104,7 @@ function App() {
   const [loading,setLoading] = useState(false);
   const [searchDone,setSearchDone] = useState(false);
   const [searchError,setSearchError] = useState(false);
-  const [donorForm,setDonorForm] = useState({name:'',phone:'',blood_group:'',location:'',consent:false});
+  const [donorForm,setDonorForm] = useState({name:'',phone:'',blood_group:'',location:'',age:'',weight_kg:'',has_donated:false,last_donation_date:'',consent:false});
   const [donorStatus,setDonorStatus] = useState('');
   const [submitting,setSubmitting] = useState(false);
   const [session,setSession] = useState(null);
