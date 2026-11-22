@@ -11,6 +11,6 @@
   "theme_color": "#9f1d2d",
   "orientation": "portrait-primary",
   "icons": [
-    { "src": "./app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+    { "src": "./app-icon.svg", "sizes": "192x192 512x512", "type": "image/svg+xml", "purpose": "any" }
   ]
 }
