@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { ArrowRight, ArrowUpRight, BadgeCheck, Check, ChevronDown, Droplet, HeartHandshake, HeartPulse, MapPin, Menu, Search, ShieldCheck, X, LockKeyhole, Trash2, LogIn, LogOut, FileText, Eye, UserCheck, Phone, Quote } from 'lucide-react';
 import './style.css';
 import './redesign.css';
+import './red-forward.css';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://fpibnalcztfghugtpjex.supabase.co';
 const supabasePublicKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -205,15 +206,23 @@ function App() {
   const displayed = donors;
   const scrollTo = id => { document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); setMobileMenu(false); };
   const toNepaliDigits = value => String(value).replace(/[0-9]/g, digit => '०१२३४५६७८९'[Number(digit)]);
+  // Edit this list to add or remove Biratnagar donor areas.
   const locations = [
+    {value:'Rani',en:'Rani',ne:'रानी'},
+    {value:'Traffic Chowk',en:'Traffic Chowk',ne:'ट्राफिक चोक'},
+    {value:'Mahendra Chowk',en:'Mahendra Chowk',ne:'महेन्द्र चोक'},
+    {value:'Main Road',en:'Main Road',ne:'मेन रोड'},
+    {value:'Bargachhi',en:'Bargachhi',ne:'बरगाछी'},
+    {value:'Tinpaini',en:'Tinpaini',ne:'तीनपैनी'},
+    {value:'Hatkhola',en:'Hatkhola',ne:'हाटखोला'},
+    {value:'Jatuwa',en:'Jatuwa',ne:'जटुवा'},
     ...Array.from({length:19},(_,index) => {
       const ward = index + 1;
       return {value:`Biratnagar-${ward} / विराटनगर-${toNepaliDigits(ward)}`,en:`Biratnagar-${ward}`,ne:`विराटनगर-${toNepaliDigits(ward)}`};
     }),
     {value:'Itahari / इटहरी',en:'Itahari',ne:'इटहरी'},
     {value:'Rangeli / रंगेली',en:'Rangeli',ne:'रंगेली'},
-    {value:'Other areas of Morang / मोरङका अन्य क्षेत्र',en:'Other areas of Morang',ne:'मोरङका अन्य क्षेत्र'},
-    {value:'Other location / अन्य स्थान',en:'Other location',ne:'अन्य स्थान'}
+    {value:'Other areas of Morang / मोरङका अन्य क्षेत्र',en:'Other areas of Morang',ne:'मोरङका अन्य क्षेत्र'}
   ];
 
   const isPrivateAdminRoute = window.location.pathname === '/raktasetu-control-8f4c2d91';
