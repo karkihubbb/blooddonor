@@ -52,7 +52,7 @@ const localGuideCopy = {
     faqCards: [
       { title: 'Does the directory guarantee a donor is available?', body: 'No. It shows eligible public listings from volunteers who have agreed to be included. Listings can change, and the site cannot guarantee that a donor is available for a particular request.' },
       { title: 'Are donor phone numbers shown openly?', body: 'No. Donor cards do not display the phone number as plain text. Use the request-phone option on the listing to start the contact process.' },
-      { title: 'Can I register as a voluntary donor?', body: 'Yes. Use the donor registration form and provide your own details. The current form requires consent to show your name, blood group, area and contact details in the public directory, so register only if you are comfortable with that.' }
+      { title: 'Can I register as a voluntary donor?', body: 'Yes. Use the donor registration form and provide your own details. The current registration form requires public-listing consent and collects your name, blood group, area and phone number. Register only with your own details if you agree to the form's stated consent terms.' }
     ]
   },
   ne: {
@@ -68,7 +68,7 @@ const localGuideCopy = {
     faqCards: [
       { title: 'के सूचीले रक्तदाता उपलब्ध हुने ग्यारेन्टी गर्छ?', body: 'गर्दैन। यसमा सार्वजनिक सूचीमा रहन सहमति दिएका रक्तदाताका विवरण देखिन्छन्। उपलब्धता परिवर्तन हुन सक्छ र कुनै विशेष अनुरोधका लागि रक्तदाता उपलब्ध हुने ग्यारेन्टी छैन।' },
       { title: 'के रक्तदाताको फोन नम्बर सबैले देख्न सक्छन्?', body: 'सक्दैनन्। रक्तदाता कार्डमा फोन नम्बर खुला रूपमा देखाइँदैन। सम्पर्क प्रक्रिया सुरु गर्न सूचीमा रहेको फोन नम्बर अनुरोध गर्ने विकल्प प्रयोग गर्नुहोस्।' },
-      { title: 'के म स्वैच्छिक रक्तदाताका रूपमा दर्ता हुन सक्छु?', body: 'सक्नुहुन्छ। रक्तदाता दर्ता फाराममा आफ्नै विवरण राख्नुहोस्। हालको फारामले नाम, रक्त समूह, स्थान र सम्पर्क विवरण सार्वजनिक सूचीमा देखाउन सहमति माग्छ। सहज भएमा मात्र दर्ता गर्नुहोस्।' }
+      { title: 'के म स्वैच्छिक रक्तदाताका रूपमा दर्ता हुन सक्छु?', body: 'सक्नुहुन्छ। रक्तदाता दर्ता फाराममा आफ्नै विवरण राख्नुहोस्। हालको दर्ता फाराममा सार्वजनिक सूचीको सहमति अनिवार्य छ र नाम, रक्त समूह, स्थान तथा फोन नम्बर मागिन्छ। फाराममा उल्लेख गरिएको सहमतिमा राजी हुनुहुन्छ भने मात्र आफ्नै विवरण राखेर दर्ता गर्नुहोस्।' }
     ]
   }
 };
