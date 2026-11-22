@@ -68,9 +68,6 @@ function App() {
   const [adminLoading,setAdminLoading] = useState(false);
   const [isAdmin,setIsAdmin] = useState(false);
   const [privacyOpen,setPrivacyOpen] = useState(false);
-  const [contactNumbers,setContactNumbers] = useState({});
-  const [contactLoading,setContactLoading] = useState({});
-  const [faqOpen,setFaqOpen] = useState(0);
   const t = copy[lang];
   useEffect(() => { document.documentElement.lang = lang; document.title = lang === 'ne' ? 'विराटनगर रक्तदाता सञ्जाल' : 'BiratnagarBloodNetwork'; try { localStorage.setItem('rakta-language-v2',lang); } catch {} }, [lang]);
 
@@ -95,7 +92,7 @@ function App() {
       setAdminLoading(false); return;
     }
     setIsAdmin(true);
-    const {data:donorData,error:donorError} = await supabase.rpc('admin_list_donors');
+    const {data:donorData,error:donorError} = await supabase.from('donors').select('id,name,phone,blood_group,location,public_listing,is_available,is_approved,created_at').order('created_at',{ascending:false});
     if (donorError) setAdminMessage('Could not load donor records. Check the database policies.');
     setAdminDonors(donorData || []);
     setAdminLoading(false);
@@ -142,31 +139,13 @@ function App() {
       setDonors([]);
       setLoading(false); return;
     }
-    let query = supabase.from('donors').select('id,blood_group,location,is_available,created_at').eq('is_available',true).eq('public_listing',true).eq('is_approved',true).order('created_at',{ascending:false});
+    let query = supabase.from('donors').select('id,name,phone,blood_group,location,is_available,created_at').eq('is_available',true).eq('public_listing',true).eq('is_approved',true).order('created_at',{ascending:false});
     if (group !== 'all') query = query.eq('blood_group',group);
     if (searchLocation.trim()) query = query.ilike('location',`%${searchLocation.trim()}%`);
     const {data,error} = await query.limit(60);
     setDonors(error ? [] : (data || []));
     setSearchError(Boolean(error));
     setLoading(false);
-  }
-
-  async function revealDonorContact(donor) {
-    if (contactNumbers[donor.id] || contactLoading[donor.id]) return;
-    setContactLoading(rows=>({...rows,[donor.id]:true}));
-    // The database RPC checks donor consent and applies a basic per-browser request limit.
-    let requestToken = '';
-    try {
-      requestToken = sessionStorage.getItem('bbn-contact-token') || crypto.randomUUID();
-      sessionStorage.setItem('bbn-contact-token',requestToken);
-    } catch { requestToken = crypto.randomUUID(); }
-    const {data,error} = await supabase.rpc('request_donor_contact',{p_donor_id:donor.id,p_request_token:requestToken});
-    if (error || !data) {
-      setSearchError(true);
-    } else {
-      setContactNumbers(rows=>({...rows,[donor.id]:data}));
-    }
-    setContactLoading(rows=>({...rows,[donor.id]:false}));
   }
 
   async function submitDonor(e) {
@@ -209,118 +188,73 @@ function App() {
   const displayed = donors;
   const scrollTo = id => { document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); setMobileMenu(false); };
   const toNepaliDigits = value => String(value).replace(/[0-9]/g, digit => '०१२३४५६७८९'[Number(digit)]);
-  // Edit this list to add or remove Biratnagar donor areas.
   const locations = [
-    {value:'Rani',en:'Rani',ne:'रानी'},
-    {value:'Traffic Chowk',en:'Traffic Chowk',ne:'ट्राफिक चोक'},
-    {value:'Mahendra Chowk',en:'Mahendra Chowk',ne:'महेन्द्र चोक'},
-    {value:'Main Road',en:'Main Road',ne:'मेन रोड'},
-    {value:'Bargachhi',en:'Bargachhi',ne:'बरगाछी'},
-    {value:'Tinpaini',en:'Tinpaini',ne:'तीनपैनी'},
-    {value:'Hatkhola',en:'Hatkhola',ne:'हाटखोला'},
-    {value:'Jatuwa',en:'Jatuwa',ne:'जटुवा'},
     ...Array.from({length:19},(_,index) => {
       const ward = index + 1;
       return {value:`Biratnagar-${ward} / विराटनगर-${toNepaliDigits(ward)}`,en:`Biratnagar-${ward}`,ne:`विराटनगर-${toNepaliDigits(ward)}`};
     }),
     {value:'Itahari / इटहरी',en:'Itahari',ne:'इटहरी'},
     {value:'Rangeli / रंगेली',en:'Rangeli',ne:'रंगेली'},
-    {value:'Other areas of Morang / मोरङका अन्य क्षेत्र',en:'Other areas of Morang',ne:'मोरङका अन्य क्षेत्र'}
+    {value:'Other areas of Morang / मोरङका अन्य क्षेत्र',en:'Other areas of Morang',ne:'मोरङका अन्य क्षेत्र'},
+    {value:'Other location / अन्य स्थान',en:'Other location',ne:'अन्य स्थान'}
   ];
 
   const isPrivateAdminRoute = window.location.pathname === '/raktasetu-control-8f4c2d91';
 
   return <div className="site-shell">
     {!isPrivateAdminRoute && <>
+    <div className="topline"><div className="container topline-inner"><span><span className="pulse"></span>{t.live}</span><span className="topline-right"><MapPin size={13}/> Biratnagar, Nepal <span className="top-divider"></span><div className="language-switch"><button className={lang==='ne'?'active':''} onClick={()=>setLang('ne')}>नेपाली</button><span>|</span><button className={lang==='en'?'active':''} onClick={()=>setLang('en')}>English</button></div></span></div></div>
     <header className="header"><div className="container nav-wrap">
-      <a className="brand" href="#home" onClick={e=>{e.preventDefault();scrollTo('home')}}><span className="brand-mark"><Droplet size={23} fill="currentColor"/></span><span><strong>BiratnagarBloodNetwork</strong><small>Biratnagar, Morang, Nepal</small></span></a>
-      <nav className={mobileMenu?'nav-links open':'nav-links'} aria-label="Main navigation">
-        <button onClick={()=>scrollTo('find')}>{lang==='ne'?'रक्तदाता खोज्नुहोस्':'Find donors'}</button>
-        <button onClick={()=>scrollTo('how')}>{lang==='ne'?'कसरी काम गर्छ':'How it works'}</button>
-        <button onClick={()=>scrollTo('donate')}>{lang==='ne'?'रक्तदाता बन्नुहोस्':'Become a donor'}</button>
-        <button onClick={()=>scrollTo('faq')}>FAQ</button>
-        <div className="language-switch"><button className={lang==='ne'?'active':''} onClick={()=>setLang('ne')}>नेपाली</button><span aria-hidden="true">/</span><button className={lang==='en'?'active':''} onClick={()=>setLang('en')}>English</button></div>
-      </nav>
-      <button className="mobile-toggle" onClick={()=>setMobileMenu(!mobileMenu)} aria-label={mobileMenu?'Close menu':'Open menu'} aria-expanded={mobileMenu}>{mobileMenu?<X/>:<Menu/>}</button>
+      <a className="brand" href="#" onClick={e=>{e.preventDefault();scrollTo('home')}}><span className="brand-mark"><Droplet size={24} fill="currentColor"/></span><span><strong>{lang==='ne'?'विराटनगर रक्तदाता सञ्जाल':'BiratnagarBloodNetwork'}</strong><small>{lang==='ne'?'विराटनगर, नेपाल':'BIRATNAGAR, NEPAL'}</small></span></a>
+      <nav className={mobileMenu?'nav-links open':'nav-links'}><button onClick={()=>scrollTo('home')}>{lang==='ne'?'गृहपृष्ठ':'Home'}</button><button className="nav-register" onClick={()=>scrollTo('donate')}>{lang==='ne'?'रक्तदाता दर्ता':'Donor Registration'}</button><button onClick={()=>scrollTo('find')}>{lang==='ne'?'रक्तदाता खोज्नुहोस्':'Find Donors'}</button><button onClick={()=>scrollTo('awareness')}>{lang==='ne'?'रक्तदान जानकारी':'Donation Info'}</button><button onClick={()=>scrollTo('about')}>{t.about}</button><button onClick={()=>scrollTo('privacy')}>{lang==='en'?'Privacy':'गोपनीयता'}</button><button className="nav-cta" onClick={()=>scrollTo('donate')}>{t.become}<ArrowUpRight size={15}/></button></nav>
+      <button className="mobile-toggle" onClick={()=>setMobileMenu(!mobileMenu)} aria-label="Toggle menu">{mobileMenu?<X/>:<Menu/>}</button>
     </div></header>
+
     <main>
-      <section className="hero" id="home">
-        <div className="container hero-content">
-          <div className="hero-copy">
-            <div className="eyebrow"><Droplet size={17}/> Biratnagar, Morang</div>
-            <h1>{lang==='ne'?'विराटनगरमा रगत चाहियो?':'Need blood in Biratnagar?'} <span>{lang==='ne'?'नजिकै रक्तदाता खोज्नुहोस्।':'Find a donor near you.'}</span></h1>
-            <p className="hero-intro">{lang==='ne'?'रक्त समूह र स्थानका आधारमा स्वेच्छिक रक्तदाता खोज्नुहोस् वा रक्तदाताका रूपमा दर्ता हुनुहोस्।':'A community directory to find consenting voluntary donors by blood group and area, or register as a donor.'}</p>
-            <div className="hero-actions">
-              <button className="button button-light" onClick={()=>scrollTo('find')}>{lang==='ne'?'रक्तदाता खोज्नुहोस्':'Find a donor'} <Search size={17}/></button>
-              <button className="button button-outline-light" onClick={()=>scrollTo('donate')}>{lang==='ne'?'रक्तदाता बन्नुहोस्':'Become a donor'} <ArrowRight size={17}/></button>
-            </div>
-          </div>
-          <aside className="hero-card" aria-label="Blood groups supported">
-            <span className="hero-card-mark"><Droplet size={22} fill="currentColor"/></span>
-            <h2>{lang==='ne'?'आठ रक्त समूह':'Search all blood groups'}</h2>
-            <p>{lang==='ne'?'आवश्यक रक्त समूह छानेर खोजी गर्नुहोस्।':'Choose a blood group to find listed donors in your area.'}</p>
-            <div className="hero-blood-groups">{bloodGroups.map(g=><span key={g}>{g}</span>)}</div>
-          </aside>
-        </div>
-      </section>
+      <section className="directory-section section-pad" id="find"><div className="container"><div className="section-heading"><div><div className="section-kicker">{lang==='ne'?'०१ / रक्तदाताको सूची':'01 / THE DIRECTORY'}</div><h2>{t.searchTitle}</h2><p>{t.searchText}</p></div><div className="section-number">02</div></div>
+        <form className="search-panel portal-search" onSubmit={searchDonors}><div className="field"><label>{t.bloodGroup}</label><div className="select-wrap"><Droplet size={16}/><select value={group} onChange={e=>setGroup(e.target.value)}><option value="all">{t.allGroups}</option>{bloodGroups.map(g=><option key={g}>{g}</option>)}</select><ChevronDown size={15}/></div></div><div className="field"><label>{t.location}</label><input value={searchLocation} onChange={e=>setSearchLocation(e.target.value)} placeholder={lang==='ne'?'विराटनगर, वडा वा टोल लेख्नुहोस्':'Enter city, ward or area'}/></div><button className="button button-red search-submit" type="submit"><Search size={17}/>{t.searchBtn}</button></form>
+        <div className="directory-meta"><div><span className="status-dot"></span><strong>{t.available}</strong><span className="meta-count">{searchDone?displayed.length:0}</span></div><span className="sample-label">{!supabase?t.demo:t.online}</span></div>
+        {!supabase && <div className="preview-notice"><span><ShieldCheck size={16}/></span><div><strong>{t.preview}</strong><p>{t.backendMissing} {t.demoNote}</p></div></div>}
+        {loading ? <div className="empty-state">Loading…</div> : searchError ? <div className="empty-state"><h3>{lang==='ne'?'सूची उपलब्ध छैन':'Directory temporarily unavailable'}</h3><p>{lang==='ne'?'डाटाबेस जडान वा अनुमति जाँच गर्न प्रशासकलाई सम्पर्क गर्नुहोस्।':'Please ask the site administrator to check the database connection and permissions.'}</p></div> : displayed.length ? <div className="donor-grid">{displayed.map(d=><article className="donor-card" key={d.id}><div className="donor-card-top"><div className="blood-badge">{d.blood_group}</div><span className="available-tag"><span></span>{t.available}</span></div><h3>{d.name}</h3><p className="donor-location"><MapPin size={15}/>{d.location}</p><a className="donor-phone-preview donor-phone-link" href={`tel:${d.phone}`} aria-label={`${lang==='ne'?'फोन गर्नुहोस्':'Call'} ${d.name}`}><Phone size={15}/><span>{d.phone}</span><small>{lang==='ne'?'फोन गर्न छुनुहोस्':'Tap number to call'}</small></a><a className="donor-contact" href={`tel:${d.phone}`}><Phone size={17}/>{lang==='ne'?'रक्तदातालाई फोन गर्नुहोस्':'Call donor'}</a><span className="card-caption">{lang==='ne'?'पहिले अस्पतालसँग उपलब्धता पुष्टि गर्नुहोस्':'Please confirm availability with the hospital'}</span></article>)}</div> : searchDone ? <div className="empty-state"><div className="empty-icon"><Search size={23}/></div><h3>{t.noResults}</h3><p>{t.noResultsText}</p></div> : <div className="empty-state search-prompt"><div className="empty-icon"><Search size={23}/></div><h3>{lang==='ne'?'रक्त समूह र स्थान छान्नुहोस्':'Choose a blood group and area'}</h3><p>{lang==='ne'?'मिल्दो रक्तदाता हेर्न माथिको खोजी प्रयोग गर्नुहोस्।':'Use the search above to see matching registered donors.'}</p></div>}
+      </div></section>
 
-      <div className="ticker" tabIndex="0" aria-label="Save blood. Donate life. Every donor is a hero.">
-        <div className="ticker-track"><div className="ticker-group"><span>Save blood.</span><i>•</i><span>Donate life.</span><i>•</i><span>Every donor is a hero.</span><i>•</i><span>One donation can save up to three lives.</span><i>•</i></div><div className="ticker-group" aria-hidden="true"><span>Save blood.</span><i>•</i><span>Donate life.</span><i>•</i><span>Every donor is a hero.</span><i>•</i><span>One donation can save up to three lives.</span><i>•</i></div></div>
-      </div>
+      <section className="hero" id="home"><div className="hero-grid"></div><div className="container hero-content">
+        <div className="hero-copy"><div className="eyebrow"><span className="eyebrow-line"></span>{t.eyebrow}</div><h1>{t.title}<br/><em>{t.titleAccent}</em></h1><p className="hero-intro">{t.intro}</p><div className="hero-actions"><button className="button button-light" onClick={()=>scrollTo('find')}>{lang==='ne'?'रक्तदाता खोज्नुहोस्':'Find a Donor'}<Search size={17}/></button></div><div className="hero-proof"><div className="proof-icon"><HeartHandshake size={18}/></div><span>{t.local}</span><span className="proof-dot"></span><span>{lang==='ne'?'स्वैच्छिक · सहमतिमा आधारित':'VOLUNTARY · CONSENT-BASED'}</span></div></div>
 
-      <section className="directory-section section-pad" id="find">
+      <aside className="hero-directory-card" aria-label="Blood group directory preview"><div className="directory-card-top"><span className="directory-card-mark"><Droplet size={17}/></span><span>LOCAL DONOR DIRECTORY</span></div><div className="directory-card-place"><MapPin size={15}/><span>BIRATNAGAR, NEPAL</span></div><h2>{lang==='ne'?'आठ रक्त समूह':'Eight blood groups'}</h2><p>{lang==='ne'?'आफूलाई चाहिएको समूह छानेर खोजी सुरु गर्नुहोस्।':'Select the blood group you are looking for to begin.'}</p><div className="hero-blood-groups">{bloodGroups.map(g=><span key={g}>{g}</span>)}</div><div className="directory-card-foot"><ShieldCheck size={15}/><span>{lang==='ne'?'सहमति दिएका रक्तदाता मात्र':'Consenting donors only'}</span></div></aside></div><div className="hero-bottom"><div className="container hero-bottom-inner"><span>01 — CONNECT</span><span>02 — SUPPORT</span><span>03 — SAVE LIVES</span><span className="hero-bottom-caption">A LOCAL INITIATIVE FOR BIRATNAGAR</span></div></div></section>
+
+      <section className="campaign-section" id="campaigns">
         <div className="container">
-          <div className="section-heading"><div><h2>{lang==='ne'?'रक्तदाता खोज्नुहोस्':'Find a donor'}</h2><p>{lang==='ne'?'रक्त समूह र विराटनगरको क्षेत्र छान्नुहोस्।':'Choose a blood group and area in Biratnagar.'}</p></div></div>
-          <form className="search-panel portal-search" onSubmit={searchDonors}>
-            <fieldset className="field blood-search-field"><legend>{t.bloodGroup}</legend><div className="blood-picker search-blood-picker">{bloodGroups.map(g=><button type="button" key={g} className={group===g?'blood-choice selected':'blood-choice'} aria-pressed={group===g} onClick={()=>setGroup(group===g?'all':g)}>{g}</button>)}</div></fieldset>
-            <div className="field"><label htmlFor="search-area">{lang==='ne'?'क्षेत्र':'Area'}</label><select id="search-area" value={searchLocation} onChange={e=>setSearchLocation(e.target.value)}><option value="">{lang==='ne'?'सबै क्षेत्र':'All areas'}</option>{locations.map(v=><option key={v.value} value={v.en}>{v.en}</option>)}</select></div>
-            <button className="button button-red search-submit" type="submit"><Search size={17}/>{lang==='ne'?'रक्तदाता खोज्नुहोस्':'Search donors'}</button>
-          </form>
-          <div className="directory-meta"><div><span className="status-dot"></span><strong>{lang==='ne'?'सूचीमा रहेका रक्तदाता':'Listed donors'}</strong><span className="meta-count">{searchDone?displayed.length:0}</span></div><span className="sample-label">{supabase?(lang==='ne'?'प्रत्यक्ष सूची':'Live directory'):(lang==='ne'?'पूर्वावलोकन':'Preview')}</span></div>
-          {loading ? <div className="donor-grid" aria-label="Loading donors"><div className="donor-skeleton"/><div className="donor-skeleton"/><div className="donor-skeleton"/></div> :
-          searchError ? <div className="empty-state"><h3>{lang==='ne'?'सूची उपलब्ध छैन':'Directory temporarily unavailable'}</h3><p>{lang==='ne'?'कृपया केहीबेरपछि फेरि प्रयास गर्नुहोस्।':'Please try again in a moment.'}</p></div> :
-          displayed.length ? <div className="donor-grid">{displayed.map(d=><article className="donor-card" key={d.id}>
-            <div className="donor-card-top"><div className="blood-badge"><Droplet size={16} fill="currentColor"/><b>{d.blood_group}</b></div><span className="available-tag"><span/> {lang==='ne'?'सूचीमा':'Listed'}</span></div>
-            <div className="donor-details"><h3>{lang==='ne'?'स्वैच्छिक रक्तदाता':'Voluntary donor'}</h3><p className="donor-location"><MapPin size={15}/>{d.location}</p><p className="donor-date">{lang==='ne'?'सूचीमा थपिएको':'Listed'}: {new Date(d.created_at).toLocaleDateString(lang==='ne'?'ne-NP':'en-NP',{day:'numeric',month:'short',year:'numeric'})}</p></div>
-            {contactNumbers[d.id] ? <a className="donor-contact" href={`tel:${contactNumbers[d.id]}`}><Phone size={17}/>{lang==='ne'?'फोन गर्नुहोस्':'Call donor'}</a> :
-            <button className="donor-contact" type="button" disabled={contactLoading[d.id]} onClick={()=>revealDonorContact(d)}><Phone size={17}/>{contactLoading[d.id]?(lang==='ne'?'खोल्दै…':'Loading…'):(lang==='ne'?'सम्पर्क विवरण हेर्नुहोस्':'Request contact')}</button>}
-            <span className="card-caption">{lang==='ne'?'सम्पर्क विवरण अनुरोध गरेपछि मात्र देखाइन्छ।':'Contact details appear only after you request them.'}</span>
-          </article>)}</div> :
-          searchDone ? <div className="empty-state"><div className="empty-icon"><Search size={22}/></div><h3>{lang==='ne'?'यस क्षेत्रमा रक्तदाता भेटिएन':'No donors listed for this blood group and area yet.'}</h3><p>{lang==='ne'?'नजिकको अर्को क्षेत्र छानेर प्रयास गर्नुहोस्।':'Try a nearby area.'}</p></div> :
-          <div className="empty-state"><div className="empty-icon"><Search size={22}/></div><h3>{lang==='ne'?'रक्त समूह र क्षेत्र छान्नुहोस्':'Choose a blood group and area'}</h3><p>{lang==='ne'?'मिल्दो रक्तदाता हेर्न खोजी गर्नुहोस्।':'Search to see matching consenting donors.'}</p></div>}
+          <div className="campaign-heading">
+            <div>
+              <div className="section-kicker">{lang==='ne'?'०२ / रक्तदान जनचेतना':'02 / BLOOD DONATION AWARENESS'}</div>
+              <h2>{lang==='ne'?'रक्तदानको महत्व बुझौँ।':'Every donation makes a difference.'}</h2>
+              <p>{lang==='ne'?'रक्तदानबारे जानकारी फैलाऔँ र जीवन बचाउने अभियानमा साथ दिऔँ।':'Explore our blood donation awareness campaigns and help spread the message across Biratnagar.'}</p>
+            </div>
+            <span className="campaign-count">01 — 02</span>
+          </div>
+          <div className="campaign-grid">
+            <article className="campaign-card">
+              <div className="campaign-image-wrap"><img src="/10170cd7-bd22-4b0d-aab4-f03464970431.jpg" alt={lang==='ne'?'रक्तदानको महत्व र रगतको थैली':'Blood donation awareness poster featuring a blood bag'} loading="lazy"/></div>
+              <div className="campaign-card-caption"><span>CAMPAIGN 01</span><h3>{lang==='ne'?'रगतको आवश्यकता र रक्तदानको महत्व':'Why every blood donation matters'}</h3></div>
+            </article>
+            <article className="campaign-card">
+              <div className="campaign-image-wrap"><img src="/f39a2f8d-2b61-490b-9eb5-6bd98de1fccb.jpg" alt={lang==='ne'?'माया र सहयोगमार्फत रक्तदानको सन्देश':'A heartfelt blood donation awareness poster'} loading="lazy"/></div>
+              <div className="campaign-card-caption"><span>CAMPAIGN 02</span><h3>{lang==='ne'?'एक थोपा रगत, जीवनभरको आशा':'A small act. A lasting impact.'}</h3></div>
+            </article>
+          </div>
         </div>
       </section>
 
-      <section className="how-section section-pad" id="how"><div className="container"><div className="section-heading"><h2>{lang==='ne'?'यसरी काम गर्छ':'How it works'}</h2></div><div className="steps-grid">
-        <article><span>01</span><div><h3>{lang==='ne'?'खोज्नुहोस्':'Search'}</h3><p>{lang==='ne'?'रक्त समूह र नजिकको क्षेत्र छान्नुहोस्।':'Choose a blood group and nearby area.'}</p></div></article>
-        <article><span>02</span><div><h3>{lang==='ne'?'सम्पर्क अनुरोध गर्नुहोस्':'Request contact'}</h3><p>{lang==='ne'?'सम्पर्क विवरण हेर्न अनुरोध बटन थिच्नुहोस्।':'Press the contact button to reveal the donor contact.'}</p></div></article>
-        <article><span>03</span><div><h3>{lang==='ne'?'समन्वय गर्नुहोस्':'Coordinate'}</h3><p>{lang==='ne'?'रक्तदानको उपलब्धता र सुरक्षा अस्पतालमा पुष्टि गर्नुहोस्।':'Confirm availability and safety with a licensed blood bank or hospital.'}</p></div></article>
-      </div></div></section>
 
-      <section className="action-section" id="donate"><div className="container action-layout">
-        <div className="action-copy"><h2>{lang==='ne'?'रक्तदाता बन्न चाहनुहुन्छ?':'Become a voluntary donor.'}</h2><p>{lang==='ne'?'आफ्नो विवरण दर्ता गर्नुहोस् र आवश्यक पर्दा सम्पर्क हुन सहमति दिनुहोस्।':'Register your details and consent to be contacted by people looking for blood.'}</p><div className="action-aside"><ShieldCheck size={19}/><span>{lang==='ne'?'तपाईंको सहमतिबिना विवरण सार्वजनिक गरिँदैन।':'Your listing is based on your consent.'}</span></div></div>
-        <div className="form-card"><div className="form-card-head"><div><h3>{lang==='ne'?'रक्तदाता दर्ता':'Donor registration'}</h3><p>{lang==='ne'?'सबै विवरण भर्नुहोस्।':'Complete each field below.'}</p></div><span className="form-icon"><Droplet size={22}/></span></div>
-          <form onSubmit={submitDonor} className="stack-form">
-            <div className="field"><label htmlFor="donor-name">{t.fullName}</label><input id="donor-name" required maxLength="90" value={donorForm.name} onChange={e=>setDonorForm({...donorForm,name:e.target.value})} placeholder={lang==='ne'?'पूरा नाम लेख्नुहोस्':'Enter your full name'}/></div>
-            <div className="field"><label>{t.bloodGroup}</label><div className="blood-picker">{bloodGroups.map(g=><button type="button" key={g} className={donorForm.blood_group===g?'blood-choice selected':'blood-choice'} aria-pressed={donorForm.blood_group===g} onClick={()=>setDonorForm({...donorForm,blood_group:g})}>{g}</button>)}</div></div>
-            <div className="field"><label htmlFor="donor-area">{lang==='ne'?'क्षेत्र':'Area'}</label><select id="donor-area" required value={donorForm.location} onChange={e=>setDonorForm({...donorForm,location:e.target.value})}><option value="">{lang==='ne'?'क्षेत्र छान्नुहोस्':'Choose your area'}</option>{locations.map(v=><option key={v.value} value={v.value}>{lang==='ne'?v.ne:v.en}</option>)}</select></div>
-            <div className="field"><label htmlFor="donor-phone">{t.phone}</label><input id="donor-phone" required type="tel" inputMode="tel" autoComplete="tel" maxLength="20" value={donorForm.phone} onChange={e=>setDonorForm({...donorForm,phone:e.target.value})} placeholder="98XXXXXXXX"/></div>
-            <label className="consent"><input type="checkbox" required checked={donorForm.consent} onChange={e=>setDonorForm({...donorForm,consent:e.target.checked})}/><span>{lang==='ne'?'स्वैच्छिक रक्तदाताका रूपमा सूचीमा रहन र आवश्यक व्यक्तिबाट सम्पर्क हुन म सहमत छु।':'I agree to be listed as a voluntary blood donor and to be contacted by people who need blood.'}</span></label>
-            <button className="button button-red form-submit" disabled={submitting}>{submitting? t.registering:t.registerBtn}<ArrowRight size={17}/></button>
-            {donorStatus==='success'&&<div className="form-message success" role="status"><Check size={16}/>{lang==='ne'?'दर्ता सफल भयो।':'Registration received successfully.'}</div>}
-            {['consentRequired','invalidBloodGroup','invalidPhone','error','offline'].includes(donorStatus)&&<div className="form-message error" role="alert">{donorStatus==='invalidPhone'?'Please enter a valid Nepal mobile number.':donorStatus==='invalidBloodGroup'?'Please choose a blood group.':donorStatus==='offline'?t.backendMissing:donorStatus==='consentRequired'?t.consentRequired:t.registerError}</div>}
-          </form>
-        </div>
-      </div></section>
 
-      <section className="faq-section section-pad" id="faq"><div className="container"><div className="section-heading"><h2>{lang==='ne'?'बारम्बार सोधिने प्रश्न':'Frequently asked questions'}</h2></div>
-        {[
-          ['Who can donate blood?','A licensed blood bank or qualified health professional must assess donor eligibility. This directory does not determine eligibility.'],
-          ['Are phone numbers public?','They are not displayed on donor cards. A visitor must press “Request contact” to reveal a listed number.'],
-          ['How do I remove my listing?','Use the private administrator contact channel to request review or removal.'],
-          ['Is this a medical service?','No. This is a community directory, not a hospital, blood bank or emergency service.']
-        ].map(([q,a],i)=><article className="faq-row" key={q}><button aria-expanded={faqOpen===i} onClick={()=>setFaqOpen(faqOpen===i?-1:i)}><span>{q}</span><ChevronDown size={19}/></button>{faqOpen===i&&<p>{a}</p>}</article>)}
-      </div></section>
+      <section className="action-section" id="donate"><div className="container action-layout"><div className="action-copy"><div className="section-kicker light-kicker">{lang==='ne'?'०३ / समुदायमा जोडिनुहोस्':'03 / JOIN THE COMMUNITY'}</div><h2>{t.registerTitle}</h2><p>{t.registerText}</p><div className="action-aside"><ShieldCheck size={19}/><span>{t.privacyTitle}<small>{t.privacyText}</small></span></div><div className="action-aside"><HeartPulse size={19}/><span>{t.coordinator}</span></div></div><div className="form-card"><div className="form-card-head"><div><span className="form-step">{lang==='ne'?'चरण १ — व्यक्तिगत विवरण':'STEP 1 — DONOR DETAILS'}</span><h3>{t.donorForm}</h3></div><span className="form-icon"><Droplet size={22}/></span></div><form onSubmit={submitDonor} className="stack-form"><div className="field"><label>{t.fullName}</label><input required maxLength="90" value={donorForm.name} onChange={e=>setDonorForm({...donorForm,name:e.target.value})} placeholder={lang==='ne'?'पूरा नाम लेख्नुहोस्':'Enter your full name'}/></div><div className="form-row"><div className="field"><label>{t.phone}</label><input required type="tel" maxLength="20" value={donorForm.phone} onChange={e=>setDonorForm({...donorForm,phone:e.target.value})} placeholder={lang==='ne'?'९८XXXXXXXX':'98XXXXXXXX'}/></div><div className="field"><label>{t.bloodGroup}</label><div className="blood-picker">{bloodGroups.map(g=><button type="button" key={g} className={donorForm.blood_group===g?'blood-choice selected':'blood-choice'} aria-pressed={donorForm.blood_group===g} onClick={()=>setDonorForm({...donorForm,blood_group:g})}>{g}</button>)}</div></div></div><div className="field"><label>{t.area}</label><select required value={donorForm.location} onChange={e=>setDonorForm({...donorForm,location:e.target.value})}><option value="">{lang==='ne'?'स्थान छान्नुहोस्':'Choose your area'}</option>{locations.map(v=><option key={v.value} value={v.value}>{lang==='ne'?v.ne:v.en}</option>)}</select></div><label className="consent"><input type="checkbox" required checked={donorForm.consent} onChange={e=>setDonorForm({...donorForm,consent:e.target.checked})}/><span>{t.publicConsent}</span></label><p className="form-privacy">{t.privacy}</p><button className="button button-red form-submit" disabled={submitting}>{submitting?<><span className="loading-spinner" aria-hidden="true"/>{t.registering}</>:t.registerBtn}<ArrowRight size={17}/></button>{donorStatus==='success'&&<div className="form-message success"><Check size={16}/>{lang==='ne'?'दर्ता सुरक्षित भयो। तपाईंले सार्वजनिक देखाउन सहमति दिनुभएकोले तपाईंको विवरण स्वतः सूचीमा देखिनेछ।':'Registration received. Your profile will be listed automatically because you agreed to public visibility.'}</div>}{donorStatus==='consentRequired'&&<div className="form-message error">{t.consentRequired}</div>}{donorStatus==='invalidBloodGroup'&&<div className="form-message error">{lang==='ne'?'कृपया रक्त समूह छान्नुहोस्।':'Please choose a blood group.'}</div>}{donorStatus==='invalidPhone'&&<div className="form-message error">{lang==='ne'?'कृपया १० अंकको मोबाइल नम्बर राख्नुहोस्':'Please enter a valid 10-digit mobile number.'}</div>}{donorStatus==='error'&&<div className="form-message error">{t.registerError}</div>}{donorStatus==='offline'&&<div className="form-message error">{t.backendMissing}</div>}</form></div></div></section>
+
+      <section className="intro-band" id="about"><div className="container intro-layout"><div><div className="section-kicker">01 / {t.about}</div><h2>{t.community}</h2></div><div className="intro-right"><p>{t.communityText}</p><div className="mini-stats"><div><strong>8</strong><span>{t.groups}</span></div><div><strong>01</strong><span>{t.mission}</span></div><div><strong>LOCAL</strong><span>{lang==='ne'?'स्थानीय समुदाय':'Community-led'}</span></div></div></div></div></section>
+
+      <section className="quote-band"><div className="container quote-inner"><Quote size={28}/><blockquote>{lang==='ne'?'सानो सहयोगले पनि कसैको जीवनमा ठूलो आशा जगाउन सक्छ।':'A small act of kindness can bring a lifetime of hope.'}</blockquote><span>{lang==='ne'?'— विराटनगर रक्तदाता सञ्जाल':'— BiratnagarBloodNetwork'}</span></div></section>
+
+      <section className="awareness-section section-pad" id="awareness"><div className="container"><div className="section-heading awareness-heading"><div><div className="section-kicker">05 / {t.awarenessEyebrow}</div><h2>{t.awarenessTitle}</h2><p>{t.awarenessText}</p></div><div className="section-number">05</div></div><div className="awareness-grid"><article><span className="awareness-icon"><BadgeCheck size={22}/></span><span className="awareness-index">01</span><h3>{t.fact1}</h3><p>{t.fact1Text}</p></article><article><span className="awareness-icon"><ShieldCheck size={22}/></span><span className="awareness-index">02</span><h3>{t.fact2}</h3><p>{t.fact2Text}</p></article><article><span className="awareness-icon"><HeartPulse size={22}/></span><span className="awareness-index">03</span><h3>{t.fact3}</h3><p>{t.fact3Text}</p></article></div><div className="safety-note"><ShieldCheck size={20}/><p>{t.safety}</p></div></div></section>
     </main>
 
     <section className="privacy-section section-pad" id="privacy"><div className="container privacy-layout"><div><div className="section-kicker">{lang==='ne'?'०६ / विश्वास र गोपनीयता':'06 / TRUST & PRIVACY'}</div><h2>{lang==='en'?'Your details. Your choice.':'तपाईंको विवरण, तपाईंको निर्णय।'}</h2><p>{lang==='en'?'We collect only the details needed to connect donors and people requesting blood. Public listing is always based on your consent.':'रक्तदाता र रगत आवश्यक पर्ने व्यक्तिलाई जोड्न आवश्यक विवरण मात्र सङ्कलन गरिन्छ। सार्वजनिक सूचीमा राख्न तपाईंको सहमति अनिवार्य छ।'}</p></div><div className="privacy-points"><article><LockKeyhole size={20}/><div><b>{lang==='en'?'Limited access':'सीमित पहुँच'}</b><p>{lang==='en'?'Only the authorised site administrator can manage or remove donor records.':'अधिकृत वेबसाइट प्रशासकले मात्र रक्तदाता विवरण व्यवस्थापन वा हटाउन सक्छ।'}</p></div></article><article><Eye size={20}/><div><b>{lang==='en'?'Clear public listing':'स्पष्ट सार्वजनिक सूची'}</b><p>{lang==='en'?'Your name, blood group, area and phone are displayed automatically only if you opt in to public listing.':'तपाईंले सार्वजनिक सूचीमा राख्न सहमति दिएमा मात्र नाम, रक्त समूह, स्थान र फोन स्वतः देखाइन्छ।'}</p></div></article><article><FileText size={20}/><div><b>{lang==='en'?'Removal requests':'विवरण हटाउने अनुरोध'}</b><p>{lang==='en'?'Contact the site administrator if you want your details reviewed or removed.':'आफ्नो विवरण सच्याउन वा हटाउन वेबसाइट प्रशासकलाई सम्पर्क गर्नुहोस्।'}</p></div></article></div></div><div className="container privacy-full"><h3>{lang==='en'?'Privacy policy':'गोपनीयता नीति'}</h3><p>{lang==='en'?'BiratnagarBloodNetwork is a community contact directory, not a hospital or blood bank. When you register, the information you submit (name, phone number, blood group and location) is stored to help people find voluntary donors. Your phone number and other profile details are publicly visible only when you tick the public-listing consent box. Blood requests are kept for coordination and are not displayed in the public donor directory. The administrator account is restricted to authorised personnel and is the only role permitted to review donor registrations, update availability, or remove records. We do not intentionally sell personal information. Do not submit another person’s details without their permission. You may ask the administrator to correct or remove your information. Information may be retained only as long as needed for the directory. This is a plain-language draft and should be reviewed by the responsible organisation before public launch.':'विराटनगर रक्तदाता सञ्जाल रक्तदाता र रगत आवश्यक पर्ने व्यक्तिबीच सम्पर्क गराउने माध्यम हो; यो अस्पताल वा रक्तसञ्चार केन्द्र होइन। दर्ता गर्दा पठाइएको नाम, फोन नम्बर, रक्त समूह र स्थान स्वैच्छिक रक्तदाता खोज्न प्रयोग गरिन्छ। सार्वजनिक सूचीमा राख्न सहमति बाकसमा टिक गरेपछि मात्र तपाईंको फोन र अन्य विवरण सार्वजनिक देखाइन्छ। रक्त अनुरोधहरू समन्वयका लागि राखिन्छन् र सार्वजनिक रक्तदाता सूचीमा देखाइँदैनन्। अधिकृत प्रशासक खाताले मात्र रक्तदाता दर्ता जाँच गर्न, उपलब्धता बदल्न वा विवरण हटाउन सक्छ। व्यक्तिगत विवरण बिक्री गर्ने उद्देश्य छैन। अनुमति बिना अरू व्यक्तिको विवरण नपठाउनुहोस्। आफ्नो विवरण सच्याउन वा हटाउन प्रशासकलाई अनुरोध गर्न सक्नुहुन्छ। आवश्यक अवधिसम्म मात्र विवरण राखिनेछ। यो सरल भाषामा तयार गरिएको मस्यौदा हो; सार्वजनिक सुरुआतअघि जिम्मेवार संस्थाले समीक्षा गर्नुपर्छ।'}</p><p className="privacy-updated">Last reviewed: 21 November 2026 · अन्तिम समीक्षा: २१ नोभेम्बर २०२६</p></div></section>
@@ -330,13 +264,7 @@ function App() {
       {!supabase ? <div className="admin-locked"><LockKeyhole size={24}/><h3>{lang==='en'?'Database connection required':'डाटाबेस जडान आवश्यक छ'}</h3><p>{t.backendMissing}</p></div> : !session ? <form className="admin-login form-card" onSubmit={adminLogin}><div className="form-card-head"><div><span className="form-step">AUTHORISATION REQUIRED</span><h3>{lang==='en'?'Administrator sign in':'प्रशासक लगइन'}</h3></div><span className="form-icon"><LockKeyhole size={21}/></span></div><div className="field"><label>{lang==='ne'?'प्रशासकको इमेल':'Administrator email'}</label><input required type="email" autoComplete="username" value={adminEmail} onChange={e=>setAdminEmail(e.target.value)} placeholder="Your authorised email"/></div><div className="field"><label>{lang==='ne'?'पासवर्ड':'Password'}</label><input required type="password" autoComplete="current-password" value={adminPassword} onChange={e=>setAdminPassword(e.target.value)}/></div><button className="button button-red form-submit"><LogIn size={16}/> {lang==='en'?'Sign in securely':'सुरक्षित लगइन'}</button>{adminMessage&&<div className="form-message error">{adminMessage}</div>}<p className="form-privacy">No public administrator registration. Admin access must be assigned securely in Supabase by the project owner.</p></form> : !isAdmin ? <div className="admin-locked"><LockKeyhole size={24}/><h3>Access denied</h3><p>{adminMessage||'This account is not authorised.'}</p><button className="button button-dark" onClick={adminLogout}><LogOut size={15}/> Sign out</button></div> : <div className="admin-dashboard"><div className="admin-toolbar"><span><UserCheck size={17}/> {lang==='en'?'Signed in as authorised administrator':'अधिकृत प्रशासकका रूपमा लगइन'}</span><button onClick={adminLogout}><LogOut size={15}/> Sign out</button></div>{adminMessage&&<p className="admin-message">{adminMessage}</p>}{adminLoading?<p>Loading records…</p>:<><h3>{lang==='en'?'Donor records':'रक्तदाता विवरण'} <span>{adminDonors.length}</span></h3><div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Name</th><th>Blood</th><th>Location</th><th>Phone</th><th>Listing</th><th>Review</th><th>Actions</th></tr></thead><tbody>{adminDonors.map(d=><tr key={d.id}><td>{d.name}</td><td><b className="admin-blood">{d.blood_group}</b></td><td>{d.location}</td><td>{d.phone}</td><td>{d.public_listing?'Public opt-in':'Private'}</td><td><span className={d.is_approved?'review-approved':'review-pending'}>{d.is_approved?'Approved':'Pending review'}</span></td><td><div className="admin-actions"><button onClick={()=>adminToggleApproval(d)}>{d.is_approved?'Unapprove':'Approve'}</button><button onClick={()=>adminToggleAvailability(d)}>{d.is_available?'Pause':'Activate'}</button><button className="delete-action" onClick={()=>adminDeleteDonor(d.id)}><Trash2 size={14}/> Remove</button></div></td></tr>)}</tbody></table></div></>}</div>}
     </div></section>}
 
-    {!isPrivateAdminRoute && <footer className="footer"><div className="container footer-inner">
-      <a className="brand brand-footer" href="#home"><span className="brand-mark"><Droplet size={22} fill="currentColor"/></span><span><strong>BiratnagarBloodNetwork</strong><small>Biratnagar, Morang, Nepal</small></span></a>
-      <p>This is a community directory, not a medical service. Donor eligibility, availability and blood safety must be confirmed at a licensed blood bank or hospital.</p>
-      <div className="footer-links"><button onClick={()=>scrollTo('find')}>Find donors</button><button onClick={()=>scrollTo('donate')}>Become a donor</button><button onClick={()=>scrollTo('faq')}>FAQ</button><button onClick={()=>scrollTo('privacy')}>Privacy</button></div>
-      <small>© 2026 BiratnagarBloodNetwork</small>
-    </div></footer>}
-    {!isPrivateAdminRoute && <div className="mobile-action-bar"><button onClick={()=>scrollTo('find')}>Find donor</button><button onClick={()=>scrollTo('donate')}>Become a donor</button></div>}
+    {!isPrivateAdminRoute && <footer className="footer"><div className="container"><div className="footer-main"><div className="footer-brand"><a className="brand brand-footer" href="#home"><span className="brand-mark"><Droplet size={24} fill="currentColor"/></span><span><strong>{lang==='ne'?'विराटनगर रक्तदाता सञ्जाल':'BiratnagarBloodNetwork'}</strong><small>{lang==='ne'?'विराटनगर, नेपाल':'BIRATNAGAR, NEPAL'}</small></span></a><p>{t.footerLine}</p></div><div className="footer-links"><div><span>{t.menu}</span><button onClick={()=>scrollTo('find')}>{t.directory}</button><button onClick={()=>scrollTo('donate')}>{t.donorForm}</button><button onClick={()=>scrollTo('awareness')}>{t.awareness}</button><button onClick={()=>scrollTo('privacy')}>{lang==='en'?'Privacy policy':'गोपनीयता नीति'}</button></div><div><span>{t.contact}</span><p>Biratnagar, Koshi Province<br/>Nepal</p><p className="footer-note">Community initiative · Volunteer-led</p></div></div></div><div className="footer-bottom"><span>© 2026 BiratnagarBloodNetwork. Built for the community.</span><span>{lang==='ne'?'नेपालमा सद्भावका साथ बनाइएको':'Made with care in Nepal'} <span className="nepal-flag">♥</span></span></div></div></footer>}
   </div>;
 }
 
