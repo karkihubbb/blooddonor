@@ -881,3 +881,29 @@ body { color: var(--ink); background: #fff; }
  .action-section{padding:48px 0}
  .form-card{border-radius:12px}
 }
+
+
+/* Campaign gallery — editorial poster presentation */
+.campaign-section{padding:82px 0 88px;background:#f7f8f8;border-top:1px solid #eceff0;border-bottom:1px solid #eceff0}
+.campaign-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:30px}
+.campaign-heading h2{margin:11px 0 10px;color:#202a33;font-size:clamp(30px,3.6vw,43px);line-height:1.15;letter-spacing:-1.1px}
+.campaign-heading p{max-width:590px;margin:0;color:#66727d;font-size:14px;line-height:1.8}
+.campaign-count{padding-bottom:5px;color:#9b2638;font-size:11px;font-weight:800;letter-spacing:.16em;white-space:nowrap}
+.campaign-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+.campaign-card{overflow:hidden;margin:0;background:#fff;border:1px solid #e7e9eb;border-radius:9px;box-shadow:0 12px 32px rgba(26,35,43,.055)}
+.campaign-image-wrap{display:flex;justify-content:center;align-items:flex-start;padding:15px;background:#f0f1f1}
+.campaign-image-wrap img{display:block;width:100%;height:auto;max-height:780px;object-fit:contain;object-position:top center}
+.campaign-card-caption{padding:17px 19px 20px;border-top:1px solid #eceeef}
+.campaign-card-caption span{color:#9b2638;font-size:9px;font-weight:800;letter-spacing:.16em}
+.campaign-card-caption h3{margin:8px 0 0;color:#26313a;font-size:16px;line-height:1.45;font-weight:750}
+@media(max-width:700px){
+ .campaign-section{padding:54px 0 58px}
+ .campaign-heading{align-items:flex-start;margin-bottom:21px}
+ .campaign-heading h2{font-size:29px}
+ .campaign-heading p{font-size:13px}
+ .campaign-count{font-size:9px}
+ .campaign-grid{grid-template-columns:1fr;gap:17px}
+ .campaign-image-wrap{padding:9px}
+ .campaign-image-wrap img{max-height:none}
+ .campaign-card-caption{padding:14px 15px 17px}
+}
