@@ -1158,3 +1158,76 @@ body { color: var(--ink); background: #fff; }
   .campaign-image-wrap img{max-height:none}
   .campaign-card-caption{padding:13px 15px 15px}
 }
+
+
+/* Quiet professional polish — preserve the existing layout and colour system */
+body {
+  font-family: "DM Sans", "Noto Sans Devanagari", sans-serif;
+  text-rendering: optimizeLegibility;
+}
+.hero h1,
+.section-heading h2,
+.intro-layout h2,
+.action-copy h2,
+.privacy-layout h2,
+.campaign-heading h2 {
+  text-wrap: balance;
+}
+.hero-intro,
+.section-heading p,
+.intro-right > p,
+.action-copy > p,
+.awareness-grid p,
+.privacy-layout > div:first-child > p {
+  max-width: 62ch;
+  line-height: 1.8;
+}
+.nav-links button,
+.button,
+.field label,
+.section-kicker {
+  letter-spacing: .01em;
+}
+.campaign-grid {
+  max-width: 1000px;
+  margin-inline: auto;
+  align-items: stretch;
+}
+.campaign-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.campaign-image-wrap {
+  min-height: 410px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: #f7f5f4;
+}
+.campaign-image-wrap img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: contain;
+  object-position: center;
+}
+.campaign-card-caption {
+  flex: 1;
+}
+@media (max-width: 700px) {
+  .campaign-grid {
+    max-width: 520px;
+  }
+  .campaign-image-wrap {
+    min-height: 0;
+    padding: 12px;
+  }
+  .campaign-image-wrap img {
+    width: 100%;
+    max-height: none;
+  }
+}
