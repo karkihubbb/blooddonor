@@ -1,16 +1,16 @@
 {
   "id": "./",
   "name": "BiratnagarBloodNetwork",
-  "short_name": "Blood Donors",
+  "short_name": "Biratnagar Blood",
   "description": "Find and contact consenting local blood donors in Biratnagar, Nepal.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#fbfaf8",
+  "background_color": "#f3f1e6",
   "theme_color": "#9f1d2d",
   "orientation": "portrait-primary",
   "icons": [
-    { "src": "./app-icon.svg", "sizes": "192x192 512x512", "type": "image/svg+xml", "purpose": "any" }
+    { "src": "./app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
   ]
 }
