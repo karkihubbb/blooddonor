@@ -816,3 +816,66 @@ body { color: var(--ink); background: #fff; }
   .form-card { padding:21px 17px; }
   .footer-main { padding-top:42px; }
 }
+
+
+/* Original Biratnagar Blood Network portal styling.
+   Uses familiar blood-donation portal conventions without copying third-party assets. */
+:root{
+  --rakta:#b42335;
+  --rakta-dark:#8f1d2d;
+  --ink:#202a33;
+  --muted:#66727d;
+  --line:#e8e9ec;
+  --wash:#fff7f7;
+}
+.topline{background:#8f1d2d;color:#fff}
+.header{background:#fff;border-bottom:1px solid #eee7e8;box-shadow:0 3px 18px rgba(45,20,24,.045)}
+.nav-links button{font-size:13px;font-weight:700}
+.nav-links .nav-cta{background:var(--rakta);border-radius:8px;padding:12px 17px}
+.nav-links .nav-cta:hover{background:var(--rakta-dark)}
+.brand-mark{background:#fff0f1;color:var(--rakta);border-radius:10px}
+.hero{background:linear-gradient(115deg,#fff7f7 0%,#fff 72%);border-bottom:1px solid #f0e2e4}
+.hero-content{min-height:470px;padding:66px 0 58px;gap:clamp(32px,5vw,72px)}
+.hero h1{font-size:clamp(42px,5vw,64px);line-height:1.12;letter-spacing:-1.9px}
+.hero h1 em{color:var(--rakta)}
+.hero-intro{font-size:17px;line-height:1.8}
+.button-light,.search-submit,.form-submit{background:var(--rakta);color:#fff;border-radius:9px}
+.button-light:hover,.search-submit:hover,.form-submit:hover{background:var(--rakta-dark)}
+.hero-directory-card{border:1px solid #f0dfe2;border-radius:15px;box-shadow:0 18px 48px rgba(90,25,36,.08)}
+.directory-card-mark{border-radius:9px;background:#fff0f1}
+.hero-blood-groups span{border-radius:9px;background:#fffafa}
+.hero-bottom{background:#fff;border-top:1px solid #f0e5e6}
+.directory-section{background:#fff;padding-top:70px;padding-bottom:76px}
+.section-heading h2,.intro-layout h2,.action-copy h2,.privacy-layout h2{letter-spacing:-.8px}
+.portal-search{background:#fff;border:1px solid #eee3e4;border-radius:14px;box-shadow:0 10px 32px rgba(44,23,27,.045);padding:20px}
+.portal-search .select-wrap,.portal-search .field input{border-radius:9px}
+.portal-search .search-submit{border-radius:9px}
+.donor-card{border-radius:13px;border-color:#eee5e6;box-shadow:0 5px 18px rgba(36,28,30,.035)}
+.donor-card .blood-badge{border-radius:10px;background:#fff0f1}
+.donor-card .donor-contact{border-radius:9px}
+.action-section{background:#fff5f5}
+.action-copy h2{color:var(--ink)}
+.action-copy>p{color:#626d77}
+.action-aside{color:#596570}
+.form-card{border:1px solid #eee3e4;border-radius:14px;box-shadow:0 14px 38px rgba(48,20,25,.07)}
+.stack-form .field input,.stack-form .field select{border-radius:9px}
+.form-submit{border-radius:9px}
+.intro-band{background:#fff;border-bottom:1px solid #f0e8e9}
+.quote-band{background:#fff7f7;border-color:#f1e3e5}
+.awareness-grid article,.privacy-points article{border-radius:12px}
+.safety-note{border-radius:10px}
+.privacy-section{background:#fbf9f9}
+.admin-section{background:#fff}
+.admin-login,.admin-dashboard,.admin-locked{border-radius:12px}
+.footer{background:#202a33}
+@media(max-width:900px){
+ .hero-content{grid-template-columns:minmax(0,1fr) minmax(250px,.8fr);gap:24px}
+ .nav-links{gap:9px}
+}
+@media(max-width:700px){
+ .hero-content{padding:42px 0 34px}
+ .hero h1{font-size:clamp(38px,10vw,48px);letter-spacing:-1px}
+ .portal-search{border-radius:12px}
+ .action-section{padding:48px 0}
+ .form-card{border-radius:12px}
+}
