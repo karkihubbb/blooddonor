@@ -1231,3 +1231,10 @@ body {
     max-height: none;
   }
 }
+
+
+/* Crawlable local-help pages linked from the homepage */
+.seo-related-pages{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px;padding-top:18px;border-top:1px solid #ece7e4}
+.seo-related-pages a{display:inline-flex;align-items:center;gap:7px;padding:10px 13px;border:1px solid #e7d6d8;border-radius:5px;background:#fff;color:#9f1d2d;font-size:12px;font-weight:700;text-decoration:none}
+.seo-related-pages a:hover{border-color:#9f1d2d;background:#fcf6f7}
+@media(max-width:600px){.seo-related-pages{display:grid;grid-template-columns:1fr}.seo-related-pages a{justify-content:space-between}}
