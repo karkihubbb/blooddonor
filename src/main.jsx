@@ -51,7 +51,7 @@ const localGuideCopy = {
     faqIntro: 'A few practical details about using this community donor directory.',
     faqCards: [
       { title: 'Does the directory guarantee a donor is available?', body: 'No. It shows public listings from volunteers who have agreed to be included. Listings can change, and the site cannot guarantee that a donor is available for a particular request.' },
-      { title: 'Are donor phone numbers shown openly?', body: 'No. Donor cards do not display the phone number as plain text. Use the request-phone option on the listing to start the contact process.' },
+      { title: 'Are donor phone numbers shown openly?', body: 'Yes. Donors who explicitly consent have their phone number shown on their public card. Tapping it opens the phone dialler. Contact only for genuine blood-donation needs and respect the donor's privacy.' },
       { title: 'Can I register as a voluntary donor?', body: 'Yes. Use the donor registration form and provide your own details. The current registration form requires public-listing consent and collects your name, blood group, area and phone number. Register only with your own details if you agree to the form’s stated consent terms.' }
     ]
   },
@@ -67,7 +67,7 @@ const localGuideCopy = {
     faqIntro: 'स्थानीय रक्तदाता सूची प्रयोग गर्दा जान्नुपर्ने केही कुरा।',
     faqCards: [
       { title: 'के सूचीले रक्तदाता उपलब्ध हुने ग्यारेन्टी गर्छ?', body: 'गर्दैन। यसमा सार्वजनिक सूचीमा रहन सहमति दिएका रक्तदाताका विवरण देखिन्छन्। उपलब्धता परिवर्तन हुन सक्छ र कुनै विशेष अनुरोधका लागि रक्तदाता उपलब्ध हुने ग्यारेन्टी छैन।' },
-      { title: 'के रक्तदाताको फोन नम्बर सबैले देख्न सक्छन्?', body: 'सक्दैनन्। रक्तदाता कार्डमा फोन नम्बर खुला रूपमा देखाइँदैन। सम्पर्क प्रक्रिया सुरु गर्न सूचीमा रहेको फोन नम्बर अनुरोध गर्ने विकल्प प्रयोग गर्नुहोस्।' },
+      { title: 'के रक्तदाताको फोन नम्बर सबैले देख्न सक्छन्?', body: 'सक्छन्। स्पष्ट सहमति दिएका रक्तदाताको फोन नम्बर सार्वजनिक कार्डमा देखाइन्छ। नम्बर थिच्दा फोन गर्ने विकल्प खुल्छ। वास्तविक रक्तदान आवश्यकताका लागि मात्र सम्पर्क गर्नुहोस् र गोपनीयताको सम्मान गर्नुहोस्।' },
       { title: 'के म स्वैच्छिक रक्तदाताका रूपमा दर्ता हुन सक्छु?', body: 'सक्नुहुन्छ। रक्तदाता दर्ता फाराममा आफ्नै विवरण राख्नुहोस्। हालको दर्ता फाराममा सार्वजनिक सूचीको सहमति अनिवार्य छ र नाम, रक्त समूह, स्थान तथा फोन नम्बर मागिन्छ। फाराममा उल्लेख गरिएको सहमतिमा राजी हुनुहुन्छ भने मात्र आफ्नै विवरण राखेर दर्ता गर्नुहोस्।' }
     ]
   }
@@ -214,7 +214,7 @@ function App() {
       setDonors([]);
       setLoading(false); return;
     }
-    let query = supabase.from('donors').select('id,name,blood_group,location,is_available,created_at').eq('is_available',true).eq('public_listing',true).eq('is_approved',true).order('created_at',{ascending:false});
+    let query = supabase.from('donors').select('id,name,phone,blood_group,location,has_donated,last_donation_date,is_available,created_at').eq('is_available',true).eq('public_listing',true).eq('is_approved',true).order('created_at',{ascending:false});
     if (group !== 'all') query = query.eq('blood_group',group);
     if (searchLocation.trim()) query = query.ilike('location',`%${searchLocation.trim()}%`);
     const {data,error} = await query.limit(60);
