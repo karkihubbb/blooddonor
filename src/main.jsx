@@ -71,7 +71,7 @@ function App() {
   const [isAdmin,setIsAdmin] = useState(false);
   const [privacyOpen,setPrivacyOpen] = useState(false);
   const t = copy[lang];
-  useEffect(() => { document.documentElement.lang = lang; document.title = lang === 'ne' ? 'विराटनगर रक्तदाता सञ्जाल' : 'BiratnagarBloodNetwork'; try { localStorage.setItem('rakta-language-v2',lang); } catch {} }, [lang]);
+  useEffect(() => { document.documentElement.lang = lang; document.title = lang === 'ne' ? 'विराटनगर रक्तदाता सञ्जाल | विराटनगरमा रक्तदाता खोज्नुहोस्' : 'Biratnagar Blood Donors | BiratnagarBloodNetwork'; try { localStorage.setItem('rakta-language-v2',lang); } catch {} }, [lang]);
 
   useEffect(() => {
     if (!supabase) return;
