@@ -1415,25 +1415,25 @@ body {
 .footer-credit {
   display: inline-flex;
   align-items: baseline;
-  gap: 5px;
-  margin-left: 14px;
-  color: #d8e0e5;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: .01em;
+  gap: 7px;
+  margin-left: 16px;
+  color: #eef2f4;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .005em;
 }
 .footer-credit strong {
   color: #fff;
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -.02em;
+  font-size: 25px;
+  font-weight: 850;
+  letter-spacing: -.025em;
 }
 @media (max-width: 700px) {
   .footer-credit {
-    margin: 8px 0 0;
-    font-size: 13px;
+    margin: 9px 0 0;
+    font-size: 17px;
   }
   .footer-credit strong {
-    font-size: 17px;
+    font-size: 22px;
   }
 }
