@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://karkihubbb.github.io/blooddonor/sitemap.xml
+Sitemap: https://brtbloodnetwork.pages.dev/sitemap.xml
