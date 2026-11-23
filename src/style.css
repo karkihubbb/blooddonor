@@ -1409,3 +1409,31 @@ body {
   .hero-bottom-inner{font-size:9px}
   .section-number{display:none}
 }
+
+
+/* Give the creator credit a clear, readable presence in the footer */
+.footer-credit {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-left: 14px;
+  color: #d8e0e5;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+.footer-credit strong {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+@media (max-width: 700px) {
+  .footer-credit {
+    margin: 8px 0 0;
+    font-size: 13px;
+  }
+  .footer-credit strong {
+    font-size: 17px;
+  }
+}
